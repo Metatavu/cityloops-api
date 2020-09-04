@@ -1,0 +1,61 @@
+version: "3"
+services:
+  keycloak-mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: password
+  cityloops-api-mysql:
+    image: mysql:5.7
+    command: --lower_case_table_names=1
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cityloops-api
+      MYSQL_USER: cityloops-api
+      MYSQL_PASSWORD: password
+  test-keycloak:
+    image: jboss/keycloak:8.0.1
+    environment:
+      DB_VENDOR: MYSQL
+      DB_ADDR: keycloak-mysql
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: password
+      JDBC_PARAMS: "verifyServerCertificate=false&useSSL=false"
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_IMPORT: /opt/docker/kc.json
+    ports:
+      - 8080:8080
+    depends_on:
+      - keycloak-mysql
+    volumes:
+      - ./test-volumes/keycloak:/opt/docker
+  cityloops-api:
+    build: .
+    ports:
+      - 1234:8080
+    depends_on:
+      - cityloops-api-mysql
+      - test-keycloak
+    environment:
+      API_HOST: localhost
+      API_CLUSTER_PASSWORD: dfd9f1b6-3b04-4777-9c21-fad19ef5b8d3
+      API_DB_HOST: cityloops-api-mysql
+      API_DB_NAME: cityloops-api
+      API_DB_USERNAME: cityloops-api
+      API_DB_PASSWORD: password
+      KEYCLOAK_SECRET: f20e3183-34fa-4496-8282-7dcf177ca09b
+      KEYCLOAK_REALM: cityloops
+      KEYCLOAK_RESOURCE: api
+      KEYCLOAK_URL: http://test-keycloak:8080/auth
+      KUBERNETES_NAMESPACE: test
+      FILE_STORAGE_PROVIDER: LOCAL
+      LOCAL_FILE_STORAGE_PATH: /opt/uploads
+      JAVA_OPTS: '-javaagent:/opt/jacoco-jacocoagent.jar=output=file,append=false,dumponexit=true,destfile=/opt/jacoco/it.exec'
+    volumes:
+      - ./test-volumes/uploads:/opt/uploads
+      - $JACOCO_AGENT:/opt/jacoco-jacocoagent.jar
+      - $JACOCO:/opt/jacoco
