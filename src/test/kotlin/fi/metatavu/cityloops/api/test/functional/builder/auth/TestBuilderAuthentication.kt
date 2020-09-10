@@ -4,6 +4,7 @@ import fi.metatavu.jaxrs.test.functional.builder.AbstractTestBuilder
 import fi.metatavu.jaxrs.test.functional.builder.auth.AccessTokenProvider
 import fi.metatavu.jaxrs.test.functional.builder.auth.AuthorizedTestBuilderAuthentication
 import fi.metatavu.cityloops.api.client.infrastructure.ApiClient
+import fi.metatavu.cityloops.api.test.functional.builder.impl.CategoriesTestBuilderResource
 import fi.metatavu.cityloops.api.test.functional.settings.TestSettings
 
 /**
@@ -19,6 +20,7 @@ import fi.metatavu.cityloops.api.test.functional.settings.TestSettings
 class TestBuilderAuthentication(testBuilder: AbstractTestBuilder<ApiClient>, accessTokenProvider: AccessTokenProvider) : AuthorizedTestBuilderAuthentication<ApiClient>(testBuilder, accessTokenProvider) {
 
   private var accessTokenProvider: AccessTokenProvider? = accessTokenProvider
+  private var categories: CategoriesTestBuilderResource? = null
 
   /**
    * Creates a API client
@@ -30,6 +32,18 @@ class TestBuilderAuthentication(testBuilder: AbstractTestBuilder<ApiClient>, acc
     val result = ApiClient(TestSettings.apiBasePath)
     ApiClient.accessToken = accessToken
     return result
+  }
+
+  /**
+   * Returns a test builder resource for categories
+   *
+   * @return test builder resource for categories
+   */
+  fun categories(): CategoriesTestBuilderResource {
+    if (categories == null) {
+      categories = CategoriesTestBuilderResource(testBuilder, accessTokenProvider, createClient())
+    }
+    return categories!!
   }
 
 }
