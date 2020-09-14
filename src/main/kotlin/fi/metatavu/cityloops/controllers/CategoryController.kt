@@ -22,11 +22,12 @@ class CategoryController {
    * Creates new category
    *
    * @param name category name
+   * @param parentCategory parent category
    * @param creatorId creating user id
    * @return created category
    */
-  fun createCategory(name: String, creatorId: UUID): Category {
-    return categoryDAO.create(UUID.randomUUID(), name, creatorId, creatorId)
+  fun createCategory(name: String, parentCategory: Category?, creatorId: UUID): Category {
+    return categoryDAO.create(UUID.randomUUID(), name, parentCategory, creatorId, creatorId)
   }
 
   /**
@@ -42,10 +43,11 @@ class CategoryController {
   /**
    * List of categories
    *
+   * @param parentCategory parent category
    * @return list of categories
    */
-  fun listCategories(): List<Category> {
-    return categoryDAO.listAll()
+  fun listCategories(parentCategory: Category?): List<Category> {
+    return categoryDAO.list(parentCategory)
   }
 
   /**
@@ -53,11 +55,13 @@ class CategoryController {
    *
    * @param category category to be updated
    * @param name category name
+   * @param parentCategory parent category
    * @param modifierId modifying user id
    * @return updated category
    */
-  fun updateCategory(category: Category, name: String, modifierId: UUID): Category {
+  fun updateCategory(category: Category, name: String, parentCategory: Category?, modifierId: UUID): Category {
     val result = categoryDAO.updateName(category, name, modifierId)
+    categoryDAO.updateParentCategory(result, parentCategory, modifierId)
     return result
   }
 

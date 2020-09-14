@@ -15,6 +15,7 @@ class CategoryTranslator: AbstractTranslator<fi.metatavu.cityloops.persistence.m
     val result = fi.metatavu.cityloops.api.spec.model.Category()
     result.id = entity.id
     result.name = entity.name
+    result.parentCategoryId = entity.parentCategoryId
     result.creatorId = entity.creatorId
     result.lastModifierId = entity.lastModifierId
     result.createdAt = entity.createdAt
