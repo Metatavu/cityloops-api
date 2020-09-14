@@ -20,6 +20,9 @@ class Category {
   @Column(nullable = false)
   var name: String? = null
 
+  @Column(nullable = true)
+  var parentCategoryId: UUID? = null
+
   @Column(nullable = false)
   var createdAt: OffsetDateTime? = null
 

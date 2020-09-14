@@ -29,17 +29,32 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
     val userId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
     payload ?: return createBadRequest("Missing request body")
 
+    val newName = payload.name
+
+    var newParentCategory: fi.metatavu.cityloops.persistence.model.Category? = null
+    val parentCategoryId = payload.parentCategoryId
+    if (parentCategoryId != null) {
+      newParentCategory = categoryController.findCategoryById(payload.parentCategoryId)
+    }
+
     val createdCategory = categoryController.createCategory(
-      name = payload.name,
+      name = newName,
+      parentCategory = newParentCategory,
       creatorId = userId
     )
 
     return createOk(categoryTranslator.translate(createdCategory))
   }
 
-  override fun listCategories(): Response {
+  override fun listCategories(parentCategoryId: UUID?): Response? {
     loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
-    val categories = categoryController.listCategories()
+
+    var parentCategory: fi.metatavu.cityloops.persistence.model.Category? = null
+    if (parentCategoryId != null) {
+      parentCategory = categoryController.findCategoryById(parentCategoryId)
+    }
+
+    val categories = categoryController.listCategories(parentCategory)
 
     return createOk(categories.map(categoryTranslator::translate))
   }
@@ -68,10 +83,17 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
 
     val foundCategory = categoryController.findCategoryById(id = categoryId) ?: return createNotFound("Could not find category with id: $categoryId")
 
-    val name = payload.name
+    val newName = payload.name
+    var newParentCategory: fi.metatavu.cityloops.persistence.model.Category? = null
+    val parentCategoryId = payload.parentCategoryId
+    if (parentCategoryId != null) {
+      newParentCategory = categoryController.findCategoryById(payload.parentCategoryId)
+    }
+
     val updatedCategory = categoryController.updateCategory(
       category = foundCategory,
-      name = name,
+      name = newName,
+      parentCategory = newParentCategory,
       modifierId = userId
     )
 

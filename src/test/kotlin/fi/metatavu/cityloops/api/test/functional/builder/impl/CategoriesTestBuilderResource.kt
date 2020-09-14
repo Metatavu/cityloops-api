@@ -19,12 +19,13 @@ class CategoriesTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>
   }
 
   /**
-   * List all categories
+   * List categories
    *
+   * @param parentCategoryId parent category id
    * @return list of categories
    */
-  fun listAll(): Array<Category> {
-    return api.listCategories()
+  fun list(parentCategoryId: UUID?): Array<Category> {
+    return api.listCategories(parentCategoryId)
   }
   /**
    * Creates new category with default values

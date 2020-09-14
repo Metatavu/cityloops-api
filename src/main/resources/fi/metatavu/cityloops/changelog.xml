@@ -26,4 +26,10 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="parentcategory" author="jari.nykanen">
+        <addColumn tableName="category">
+            <column name="parentCategoryId" type="binary(16)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
