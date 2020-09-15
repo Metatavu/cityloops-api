@@ -32,4 +32,50 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="items" author="jari.nykanen">
+        <createTable tableName="item">
+            <column name="id" type="binary(16)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="title" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="binary(16)">
+                <constraints nullable="false" foreignKeyName="FK_ITEM_CATEGORY_CATEGORY_ID" referencedColumnNames="id" referencedTableName="category"/>
+            </column>
+            <column name="onlyForCompanies" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="metadata" type="longtext">
+                <constraints nullable="false"/>
+            </column>
+            <column name="thumbnailUrl" type="varchar(191)"/>
+            <column name="properties" type="longtext"/>
+            <column name="createdat" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modifiedat" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creatorid" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastmodifierid" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="itemimage">
+            <column name="id" type="binary(16)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="item_id" type="binary(16)">
+                <constraints nullable="false" foreignKeyName="FK_ITEM_IMAGE_ID_ITEM_ID" referencedColumnNames="id" referencedTableName="item"/>
+            </column>
+            <column name="url" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>
