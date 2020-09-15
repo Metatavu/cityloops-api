@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fi.metatavu.cityloops.api.spec.model.ItemProperty
 import fi.metatavu.cityloops.api.spec.model.Metadata
 import fi.metatavu.cityloops.persistence.dao.ItemDAO
+import fi.metatavu.cityloops.persistence.dao.ItemImageDAO
 import fi.metatavu.cityloops.persistence.model.Category
 import fi.metatavu.cityloops.persistence.model.Item
 import java.util.*
@@ -20,6 +21,12 @@ class ItemController {
 
   @Inject
   private lateinit var itemDAO: ItemDAO
+
+  @Inject
+  private lateinit var itemImageDAO: ItemImageDAO
+
+  @Inject
+  private lateinit var itemImageController: ItemImageController
 
   /**
    * Creates new item
@@ -103,6 +110,36 @@ class ItemController {
     itemDAO.updateThumbnailUrl(result, thumbnailUrl, lastModifierId)
     itemDAO.updateProperties(result, getDataAsString(properties), lastModifierId)
     return result
+  }
+
+  /**
+   * Sets item images
+   *
+   * @param item item where images belong to
+   * @param imageUrls list of image urls
+   */
+  fun setItemImages(item: Item, imageUrls: List<String>) {
+    val existingImages = itemImageDAO.listImages(item).toMutableList()
+
+    for (imageUrl in imageUrls) {
+      val existingImage = existingImages.find { it.url == imageUrl }
+      if (existingImage == null) {
+        itemImageDAO.create(UUID.randomUUID(), item, imageUrl)
+      } else {
+        existingImages.remove(existingImage)
+      }
+    }
+
+    existingImages.forEach(itemImageDAO::delete)
+  }
+
+  /**
+   * Delete item images
+   *
+   * @param item item
+   */
+  fun deleteItemImages(item: Item) {
+    itemImageController.listItemImages(item).forEach(itemImageController::deleteItemImage)
   }
 
   /**

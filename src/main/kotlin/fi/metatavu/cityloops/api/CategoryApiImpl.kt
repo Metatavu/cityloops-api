@@ -95,9 +95,9 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
     loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
     categoryId ?: return createBadRequest("Missing category ID")
 
-    val categoryToDelete = categoryController.findCategoryById(id = categoryId) ?: return createNotFound("Could not find category with id: $categoryId")
-    categoryController.deleteCategory(category = categoryToDelete)
-    return createOk("")
+    val category = categoryController.findCategoryById(id = categoryId) ?: return createNotFound("Could not find category with id: $categoryId")
+    categoryController.deleteCategory(category)
+    return createNoContent()
   }
 
 }

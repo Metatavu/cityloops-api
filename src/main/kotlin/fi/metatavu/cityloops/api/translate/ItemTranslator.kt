@@ -24,7 +24,7 @@ class ItemTranslator: AbstractTranslator<fi.metatavu.cityloops.persistence.model
   override fun translate(entity: fi.metatavu.cityloops.persistence.model.Item): fi.metatavu.cityloops.api.spec.model.Item {
     val result = fi.metatavu.cityloops.api.spec.model.Item()
 
-    val imagesIds = itemImageController.listItemImages(entity).stream()
+    val imagesUrls = itemImageController.listItemImages(entity)
       .map { it.url!! }
       .toList()
 
@@ -33,7 +33,7 @@ class ItemTranslator: AbstractTranslator<fi.metatavu.cityloops.persistence.model
     result.category = entity.category?.id
     result.onlyForCompanies = entity.onlyForCompanies
     result.metadata = getMetadata(entity.metadata)
-    result.images = imagesIds
+    result.images = imagesUrls
     result.thumbnailUrl = entity.thumbnailUrl
     result.properties = getItemProperties(entity.properties)
     result.creatorId = entity.creatorId

@@ -35,10 +35,6 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
   @Inject
   private lateinit var itemTranslator: ItemTranslator
 
-  @Inject
-  private lateinit var itemImageController: ItemImageController
-
-
   override fun createItem(payload: Item?): Response {
     val userId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
     payload ?: return createBadRequest("Missing request body")
@@ -62,7 +58,7 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       creatorId = userId
     )
 
-    itemImageController.setItemImages(item, imageUrls)
+    itemController.setItemImages(item, imageUrls)
     return createOk(itemTranslator.translate(item))
   }
 
@@ -108,7 +104,7 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       lastModifierId = userId
     )
 
-    itemImageController.setItemImages(item, imageUrls)
+    itemController.setItemImages(item, imageUrls)
     return createOk(itemTranslator.translate(item))
   }
 
@@ -117,8 +113,8 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     itemId ?: return createBadRequest("Missing item ID")
 
     val item = itemController.findItemById(itemId) ?: return createNotFound("Item with ID: $itemId could not be found!")
-    itemImageController.listItemImages(item).forEach(itemImageController::deleteItemImage)
+    itemController.deleteItemImages(item)
     itemController.deleteItem(item)
-    return createOk("")
+    return createNoContent()
   }
 }

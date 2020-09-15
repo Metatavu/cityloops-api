@@ -68,7 +68,9 @@ class ItemImageController {
       }
     }
 
-    existingImages.forEach(itemImageDAO::delete)
+    existingImages.forEach{ itemImage ->
+      deleteItemImage(itemImage)
+    }
   }
 
   /**
@@ -77,7 +79,7 @@ class ItemImageController {
    * @param itemImage itemImage to be deleted
    */
   fun deleteItemImage(itemImage: ItemImage) {
-    return itemImageDAO.delete(itemImage)
+    itemImageDAO.delete(itemImage)
   }
 
 }

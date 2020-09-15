@@ -50,7 +50,6 @@ class ItemImageDAO() : AbstractDAO<ItemImage>() {
    * @return list of item images
    */
   fun listImages(item: Item): List<ItemImage> {
-
     val entityManager = getEntityManager()
     val criteriaBuilder = entityManager.criteriaBuilder
     val criteria: CriteriaQuery<ItemImage> = criteriaBuilder.createQuery(ItemImage::class.java)
@@ -59,6 +58,5 @@ class ItemImageDAO() : AbstractDAO<ItemImage>() {
     criteria.where(criteriaBuilder.equal(root.get(ItemImage_.item), item))
     val query: TypedQuery<ItemImage> = entityManager.createQuery<ItemImage>(criteria)
     return query.resultList
-
   }
 }
