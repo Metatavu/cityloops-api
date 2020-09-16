@@ -39,9 +39,8 @@ class ItemTestIT: AbstractFunctionalTest() {
       )
 
       val customItem = it.admin().items().create(customItemToCreate)
-      assertEquals(customItemToCreate.title, customItem.title)
-      assertEquals(customItemToCreate.category, customItem.category)
-      assertEquals(customItemToCreate.onlyForCompanies, customItem.onlyForCompanies)
+      val secondFoundItem = it.admin().items().findItem(customItem.id!!)
+      assertJsonsEqual(customItem, secondFoundItem)
     }
   }
 
@@ -52,16 +51,26 @@ class ItemTestIT: AbstractFunctionalTest() {
       assertEquals(0, firstList.size)
 
       val categoryId = it.admin().categories().create().id!!
-      it.admin().items().create(categoryId)
 
+      val firstItemId = it.admin().items().create(categoryId).id!!
       val secondList = it.admin().items().list(null)
       assertEquals(1, secondList.size)
 
-      it.admin().items().create(categoryId)
-      it.admin().items().create(categoryId)
-
+      val secondItemId = it.admin().items().create(categoryId).id!!
       val thirdList = it.admin().items().list(null)
-      assertEquals(3, thirdList.size)
+      assertEquals(2, thirdList.size)
+
+      val thirdItemId = it.admin().items().create(categoryId).id!!
+      val forthList = it.admin().items().list(null)
+      assertEquals(3, forthList.size)
+
+      val firstItem = forthList.get(0)
+      val secondItem = forthList.get(1)
+      val thirdItem = forthList.get(2)
+
+      assertEquals(firstItemId, firstItem.id!!)
+      assertEquals(secondItemId, secondItem.id!!)
+      assertEquals(thirdItemId, thirdItem.id!!)
     }
   }
 

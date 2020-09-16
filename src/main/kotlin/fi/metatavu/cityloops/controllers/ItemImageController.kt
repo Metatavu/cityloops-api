@@ -68,9 +68,7 @@ class ItemImageController {
       }
     }
 
-    existingImages.forEach{ itemImage ->
-      deleteItemImage(itemImage)
-    }
+    existingImages.forEach(this::deleteItemImage)
   }
 
   /**

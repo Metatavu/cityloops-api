@@ -45,6 +45,7 @@ class TestBuilderAuthentication(testBuilder: AbstractTestBuilder<ApiClient>, acc
     if (categories == null) {
       categories = CategoriesTestBuilderResource(testBuilder, accessTokenProvider, createClient())
     }
+
     return categories!!
   }
 
@@ -57,6 +58,7 @@ class TestBuilderAuthentication(testBuilder: AbstractTestBuilder<ApiClient>, acc
     if (items == null) {
       items = ItemsTestBuilderResource(testBuilder, accessTokenProvider, createClient())
     }
+
     return items!!
   }
 

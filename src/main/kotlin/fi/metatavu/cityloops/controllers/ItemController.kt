@@ -35,6 +35,7 @@ class ItemController {
    * @param category category where this item belongs to
    * @param onlyForCompanies is this item available only for companies
    * @param metadata item metadata
+   * @param images list of images
    * @param thumbnailUrl item thumbnail url
    * @param properties item key value property pairs
    * @param creatorId creator's id
@@ -45,11 +46,12 @@ class ItemController {
     category: Category,
     onlyForCompanies: Boolean,
     metadata: Metadata,
+    images: List<String>?,
     thumbnailUrl: String?,
     properties: List<ItemProperty>?,
     creatorId: UUID
   ): Item {
-    return itemDAO.create(
+    val item = itemDAO.create(
       id = UUID.randomUUID(),
       title = title,
       category = category,
@@ -59,6 +61,9 @@ class ItemController {
       properties = getDataAsString(properties),
       creatorId = creatorId
     )
+
+    setItemImages(item, images)
+    return item
   }
 
   /**
@@ -88,6 +93,7 @@ class ItemController {
    * @param category category where this item belongs to
    * @param onlyForCompanies is this item available only for companies
    * @param metadata item metadata
+   * @param images list of images
    * @param thumbnailUrl item thumbnail url
    * @param properties item key value property pairs
    * @param lastModifierId last modifier user id
@@ -99,6 +105,7 @@ class ItemController {
     category: Category,
     onlyForCompanies: Boolean,
     metadata: Metadata,
+    images: List<String>?,
     thumbnailUrl: String?,
     properties: List<ItemProperty>?,
     lastModifierId: UUID
@@ -109,6 +116,7 @@ class ItemController {
     itemDAO.updateMetadata(result, getDataAsString(metadata), lastModifierId)
     itemDAO.updateThumbnailUrl(result, thumbnailUrl, lastModifierId)
     itemDAO.updateProperties(result, getDataAsString(properties), lastModifierId)
+    setItemImages(item, images)
     return result
   }
 
@@ -118,7 +126,8 @@ class ItemController {
    * @param item item where images belong to
    * @param imageUrls list of image urls
    */
-  fun setItemImages(item: Item, imageUrls: List<String>) {
+  fun setItemImages(item: Item, imageUrls: List<String>?) {
+    imageUrls ?: return
     val existingImages = itemImageDAO.listImages(item).toMutableList()
 
     for (imageUrl in imageUrls) {
@@ -148,7 +157,8 @@ class ItemController {
    * @param item item to be deleted
    */
   fun deleteItem(item: Item) {
-    return itemDAO.delete(item)
+    deleteItemImages(item)
+    itemDAO.delete(item)
   }
 
   /**

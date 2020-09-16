@@ -44,7 +44,7 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     val category = categoryController.findCategoryById(categoryId) ?: return createNotFound("Category with ID $categoryId not found")
     val onlyForCompanies = payload.onlyForCompanies
     val metadata =  payload.metadata
-    val imageUrls = payload.images
+    val images = payload.images
     val thumbnailUrl = payload.thumbnailUrl
     val itemProperties = payload.properties
 
@@ -53,12 +53,12 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       category = category,
       onlyForCompanies = onlyForCompanies,
       metadata = metadata,
+      images = images,
       thumbnailUrl = thumbnailUrl,
       properties = itemProperties,
       creatorId = userId
     )
 
-    itemController.setItemImages(item, imageUrls)
     return createOk(itemTranslator.translate(item))
   }
 
@@ -89,7 +89,7 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     val category = categoryController.findCategoryById(categoryId) ?: return createNotFound("Category with ID $categoryId not found")
     val onlyForCompanies = payload.onlyForCompanies
     val metadata =  payload.metadata
-    val imageUrls = payload.images
+    val images = payload.images
     val thumbnailUrl = payload.thumbnailUrl
     val itemProperties = payload.properties
 
@@ -99,12 +99,12 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       category = category,
       onlyForCompanies = onlyForCompanies,
       metadata = metadata,
+      images = images,
       thumbnailUrl = thumbnailUrl,
       properties = itemProperties,
       lastModifierId = userId
     )
 
-    itemController.setItemImages(item, imageUrls)
     return createOk(itemTranslator.translate(item))
   }
 
@@ -113,7 +113,6 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     itemId ?: return createBadRequest("Missing item ID")
 
     val item = itemController.findItemById(itemId) ?: return createNotFound("Item with ID: $itemId could not be found!")
-    itemController.deleteItemImages(item)
     itemController.deleteItem(item)
     return createNoContent()
   }

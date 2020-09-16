@@ -11,7 +11,6 @@ import javax.validation.constraints.NotEmpty
  * @author Jari Nykänen
  */
 @Entity
-@Table(uniqueConstraints = [UniqueConstraint(columnNames = ["item_id"])])
 class ItemImage {
 
   @Id
