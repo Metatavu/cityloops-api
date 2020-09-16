@@ -2,6 +2,12 @@
 # Script for cleaning and building CityLoops-API project.
 # Run this in the "scripts" folder of cityloops-api
 
+clear
+echo "Console cleared"
+echo "Stopping old docker containers..."
+for i in `docker ps -qa`; do docker stop $i; docker rm $i; done;
+echo "Containers stopped"
+
 cd ../api-spec/
 echo "Cleaning api-spec folder"
 rm -fR src build

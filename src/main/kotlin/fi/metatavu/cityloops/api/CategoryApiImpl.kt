@@ -59,15 +59,6 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
     return createOk(categories.map(categoryTranslator::translate))
   }
 
-  override fun deleteCategory(categoryId: UUID?): Response {
-    loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
-    categoryId ?: return createBadRequest("Missing category ID")
-
-    val categoryToDelete = categoryController.findCategoryById(id = categoryId) ?: return createNotFound("Could not find category with id: $categoryId")
-    categoryController.deleteCategory(category = categoryToDelete)
-    return createOk("")
-  }
-
   override fun findCategory(categoryId: UUID?): Response {
     loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
     categoryId ?: return createBadRequest("Missing category ID")
@@ -98,6 +89,15 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
     )
 
     return createOk(categoryTranslator.translate(updatedCategory))
+  }
+
+  override fun deleteCategory(categoryId: UUID?): Response {
+    loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    categoryId ?: return createBadRequest("Missing category ID")
+
+    val category = categoryController.findCategoryById(id = categoryId) ?: return createNotFound("Could not find category with id: $categoryId")
+    categoryController.deleteCategory(category)
+    return createNoContent()
   }
 
 }
