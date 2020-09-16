@@ -52,15 +52,15 @@ class ItemTestIT: AbstractFunctionalTest() {
 
       val categoryId = it.admin().categories().create().id!!
 
-      val firstItemId = it.admin().items().create(categoryId).id!!
+      it.admin().items().create(categoryId).id!!
       val secondList = it.admin().items().list(null)
       assertEquals(1, secondList.size)
 
-      val secondItemId = it.admin().items().create(categoryId).id!!
+      it.admin().items().create(categoryId).id!!
       val thirdList = it.admin().items().list(null)
       assertEquals(2, thirdList.size)
 
-      val thirdItemId = it.admin().items().create(categoryId).id!!
+      it.admin().items().create(categoryId).id!!
       val forthList = it.admin().items().list(null)
       assertEquals(3, forthList.size)
 
@@ -68,9 +68,13 @@ class ItemTestIT: AbstractFunctionalTest() {
       val secondItem = forthList.get(1)
       val thirdItem = forthList.get(2)
 
-      assertEquals(firstItemId, firstItem.id!!)
-      assertEquals(secondItemId, secondItem.id!!)
-      assertEquals(thirdItemId, thirdItem.id!!)
+      val idList = forthList
+        .map { it.id }
+
+      assertEquals(false, idList.contains(UUID.randomUUID()))
+      assertEquals(true, idList.contains(firstItem.id))
+      assertEquals(true, idList.contains(secondItem.id))
+      assertEquals(true, idList.contains(thirdItem.id))
     }
   }
 
