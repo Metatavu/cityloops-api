@@ -116,7 +116,7 @@ class ItemController {
     itemDAO.updateMetadata(result, getDataAsString(metadata), lastModifierId)
     itemDAO.updateThumbnailUrl(result, thumbnailUrl, lastModifierId)
     itemDAO.updateProperties(result, getDataAsString(properties), lastModifierId)
-    setItemImages(item, images)
+    setItemImages(result, images)
     return result
   }
 
