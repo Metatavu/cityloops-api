@@ -62,11 +62,11 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     return createOk(itemTranslator.translate(item))
   }
 
-  override fun listItems(userId: UUID?): Response {
+  override fun listItems(userId: UUID?, firstResult: Int?, maxResults: Int?, sortByDateReturnOldestFirst: Boolean?): Response {
     loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
 
     // TODO: Implement user API-endpoint, add userID to items and implement item filtering by userID
-    val items = itemController.listItems()
+    val items = itemController.listItems(firstResult, maxResults, sortByDateReturnOldestFirst)
     return createOk(items.map(itemTranslator::translate))
   }
 

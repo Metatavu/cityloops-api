@@ -3,11 +3,10 @@ package fi.metatavu.cityloops.persistence.dao
 import fi.metatavu.cityloops.persistence.model.Category
 import java.util.*
 import fi.metatavu.cityloops.persistence.model.Item
+import fi.metatavu.cityloops.persistence.model.Item_
 import javax.enterprise.context.ApplicationScoped
-import javax.persistence.TypedQuery
-import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Predicate
-import javax.persistence.criteria.Root
+import kotlin.collections.ArrayList
 
 /**
  * DAO class for item
@@ -129,5 +128,42 @@ class ItemDAO() : AbstractDAO<Item>() {
     item.properties = properties
     item.lastModifierId = lastModifierId
     return persist(item)
+  }
+
+  /**
+   * List items
+   *
+   * @param firstResult index of the first result
+   * @param maxResults limit amount of results to this number
+   * @param returnOldestFirst return oldest first
+   *
+   * @return list of items
+   */
+  fun list(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?): List<Item> {
+    val entityManager = getEntityManager()
+    val criteriaBuilder = entityManager.criteriaBuilder
+    val criteria = criteriaBuilder.createQuery(Item::class.java)
+    val root = criteria.from(Item::class.java)
+    val restrictions = ArrayList<Predicate>()
+
+    criteria.select(root)
+
+    if (returnOldestFirst == true) {
+      criteria.orderBy(criteriaBuilder.asc(root.get(Item_.createdAt)))
+    } else {
+      criteria.orderBy(criteriaBuilder.desc(root.get(Item_.createdAt)))
+    }
+
+    val query = entityManager.createQuery(criteria)
+
+    if (firstResult != null) {
+      query.firstResult = firstResult
+    }
+
+    if (maxResults != null) {
+      query.maxResults = maxResults
+    }
+
+    return query.resultList
   }
 }

@@ -47,26 +47,26 @@ class ItemTestIT: AbstractFunctionalTest() {
   @Test
   fun testListItems() {
     TestBuilder().use {
-      val firstList = it.admin().items().list(null)
+      val firstList = it.admin().items().list(null, null, null, null)
       assertEquals(0, firstList.size)
 
       val categoryId = it.admin().categories().create().id!!
 
       it.admin().items().create(categoryId).id!!
-      val secondList = it.admin().items().list(null)
+      val secondList = it.admin().items().list(null, null, null, null)
       assertEquals(1, secondList.size)
 
       it.admin().items().create(categoryId).id!!
-      val thirdList = it.admin().items().list(null)
+      val thirdList = it.admin().items().list(null, null, null, null)
       assertEquals(2, thirdList.size)
 
       it.admin().items().create(categoryId).id!!
-      val forthList = it.admin().items().list(null)
+      val forthList = it.admin().items().list(null, null, null, null)
       assertEquals(3, forthList.size)
 
-      val firstItem = forthList.get(0)
-      val secondItem = forthList.get(1)
-      val thirdItem = forthList.get(2)
+      val firstItem = forthList[0]
+      val secondItem = forthList[1]
+      val thirdItem = forthList[2]
 
       val idList = forthList
         .map { it.id }
@@ -75,6 +75,17 @@ class ItemTestIT: AbstractFunctionalTest() {
       assertEquals(true, idList.contains(firstItem.id))
       assertEquals(true, idList.contains(secondItem.id))
       assertEquals(true, idList.contains(thirdItem.id))
+
+      val fifthList = it.admin().items().list(null, 1, null, null)
+      val sixthList = it.admin().items().list(null, null, 1, null)
+
+      assertEquals(2, fifthList.size)
+      assertEquals(1, sixthList.size)
+
+      val categoryId2 = it.admin().categories().create().id!!
+      it.admin().items().create(categoryId2)
+      val seventhList = it.admin().items().list(null, null, null, true)
+      assertEquals(categoryId2, seventhList.last().category)
     }
   }
 
@@ -117,28 +128,28 @@ class ItemTestIT: AbstractFunctionalTest() {
   @Test
   fun testDeleteItem() {
     TestBuilder().use {
-      val firstList = it.admin().items().list(null)
+      val firstList = it.admin().items().list(null, null, null, null)
       assertEquals(0, firstList.size)
 
       val categoryId = it.admin().categories().create().id!!
       val firstId = it.admin().items().create(categoryId).id!!
 
-      val secondList = it.admin().items().list(null)
+      val secondList = it.admin().items().list(null, null, null, null)
       assertEquals(1, secondList.size)
 
       val secondId = it.admin().items().create(categoryId).id!!
       val thirdId = it.admin().items().create(categoryId).id!!
 
-      val thirdList = it.admin().items().list(null)
+      val thirdList = it.admin().items().list(null, null, null, null)
       assertEquals(3, thirdList.size)
 
       it.admin().items().delete(firstId)
-      val listAfterFirstDelete = it.admin().items().list(null)
+      val listAfterFirstDelete = it.admin().items().list(null, null, null, null)
       assertEquals(2, listAfterFirstDelete.size)
 
       it.admin().items().delete(secondId)
       it.admin().items().delete(thirdId)
-      val listAfterSecondDelete = it.admin().items().list(null)
+      val listAfterSecondDelete = it.admin().items().list(null, null, null, null)
       assertEquals(0, listAfterSecondDelete.size)
     }
   }
