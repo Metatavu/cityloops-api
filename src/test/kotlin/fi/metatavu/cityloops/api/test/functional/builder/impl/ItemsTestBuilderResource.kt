@@ -26,8 +26,8 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
    * @param userId user id
    * @return list of items
    */
-  fun list(userId: UUID?): Array<Item> {
-    return api.listItems(userId)
+  fun list(userId: UUID?, firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?): Array<Item> {
+    return api.listItems(userId, firstResult, maxResults, returnOldestFirst)
   }
 
   /**

@@ -79,10 +79,14 @@ class ItemController {
   /**
    * List of categories
    *
+   * @param firstResult index of the first result
+   * @param maxResults limit amount of results to this number
+   * @param returnOldestFirst return oldest result first
+   *
    * @return list of categories
    */
-  fun listItems(): List<Item> {
-    return itemDAO.listAll()
+  fun listItems(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?): List<Item> {
+    return itemDAO.list(firstResult, maxResults, returnOldestFirst)
   }
 
   /**
