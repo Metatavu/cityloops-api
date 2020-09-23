@@ -7,6 +7,7 @@ import fi.metatavu.cityloops.persistence.dao.ItemDAO
 import fi.metatavu.cityloops.persistence.dao.ItemImageDAO
 import fi.metatavu.cityloops.persistence.model.Category
 import fi.metatavu.cityloops.persistence.model.Item
+import fi.metatavu.cityloops.persistence.model.User
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -32,8 +33,9 @@ class ItemController {
    * Creates new item
    *
    * @param title item title
-   * @param category category where this item belongs to
+   * @param category category this item belongs to
    * @param onlyForCompanies is this item available only for companies
+   * @param user item owner
    * @param metadata item metadata
    * @param images list of images
    * @param thumbnailUrl item thumbnail url
@@ -45,6 +47,7 @@ class ItemController {
     title: String,
     category: Category,
     onlyForCompanies: Boolean,
+    user: User,
     metadata: Metadata,
     images: List<String>?,
     thumbnailUrl: String?,
@@ -56,6 +59,7 @@ class ItemController {
       title = title,
       category = category,
       onlyForCompanies = onlyForCompanies,
+      user = user,
       metadata = getDataAsString(metadata),
       thumbnailUrl = thumbnailUrl,
       properties = getDataAsString(properties),
@@ -82,11 +86,12 @@ class ItemController {
    * @param firstResult index of the first result
    * @param maxResults limit amount of results to this number
    * @param returnOldestFirst return oldest result first
+   * @param user filter by user
    *
    * @return list of categories
    */
-  fun listItems(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?): List<Item> {
-    return itemDAO.list(firstResult, maxResults, returnOldestFirst)
+  fun listItems(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?): List<Item> {
+    return itemDAO.list(firstResult, maxResults, returnOldestFirst, user)
   }
 
   /**
