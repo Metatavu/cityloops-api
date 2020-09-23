@@ -35,7 +35,7 @@ class ItemController {
    * @param title item title
    * @param category category this item belongs to
    * @param onlyForCompanies is this item available only for companies
-   * @param user item owned
+   * @param user item owner
    * @param metadata item metadata
    * @param images list of images
    * @param thumbnailUrl item thumbnail url
