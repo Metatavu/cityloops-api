@@ -112,7 +112,7 @@ class UsersTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
   /**
    * Clean resources
    *
-   * @param user user to be cleaner
+   * @param user user to be cleaned
    */
   override fun clean(user: User) {
     this.api.deleteUser(user.id!!)
