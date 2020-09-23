@@ -33,7 +33,7 @@ class ItemController {
    * Creates new item
    *
    * @param title item title
-   * @param category category where this item belongs to
+   * @param category category this item belongs to
    * @param onlyForCompanies is this item available only for companies
    * @param user item owned
    * @param metadata item metadata
