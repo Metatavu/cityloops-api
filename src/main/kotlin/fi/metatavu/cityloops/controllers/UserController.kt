@@ -26,7 +26,7 @@ class UserController {
    * @param email user email
    * @param phoneNumber user phone number
    * @param companyAccount is this user used by company
-   * @param verified us this user verified
+   * @param verified is this user verified
    * @param creatorId creator's id
    * @return created user
    */
