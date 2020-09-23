@@ -75,6 +75,8 @@ class UserController {
   /**
    * Updates a user
    *
+   * @param user user
+   * @param name user name
    * @param address user address
    * @param email user email
    * @param phoneNumber user phone number

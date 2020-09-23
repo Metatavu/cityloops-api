@@ -59,6 +59,7 @@ class UserDAO() : AbstractDAO<User>() {
    *
    * @param companyAccount list only company accounts
    * @param verified list only verified accounts
+   * @return list of users
    */
   fun list(companyAccount: Boolean?, verified: Boolean?): List<User> {
     val entityManager = getEntityManager()
@@ -86,6 +87,7 @@ class UserDAO() : AbstractDAO<User>() {
   /**
    * Updates user name
    *
+   * @param user user object
    * @param name new user name
    * @param lastModifierId last modifier's id
    * @return updated user
@@ -99,6 +101,7 @@ class UserDAO() : AbstractDAO<User>() {
   /**
    * Updates user address
    *
+   * @param user user object
    * @param address user address
    * @param lastModifierId last modifier's id
    * @return updated user
@@ -112,6 +115,7 @@ class UserDAO() : AbstractDAO<User>() {
   /**
    * Updates user email
    *
+   * @param user user object
    * @param email new user email
    * @param lastModifierId last modifier's id
    * @return updated user
@@ -125,6 +129,7 @@ class UserDAO() : AbstractDAO<User>() {
   /**
    * Updates user phone number
    *
+   * @param user user object
    * @param phoneNumber new user phone number
    * @param lastModifierId last modifier's id
    * @return updated user
@@ -138,6 +143,7 @@ class UserDAO() : AbstractDAO<User>() {
   /**
    * Updates user company account
    *
+   * @param user user object
    * @param companyAccount new user company account value
    * @param lastModifierId last modifier's id
    * @return updated user
@@ -151,6 +157,7 @@ class UserDAO() : AbstractDAO<User>() {
   /**
    * Updates user verified
    *
+   * @param user user object
    * @param verified new user verified value
    * @param lastModifierId last modifier's id
    * @return updated user
