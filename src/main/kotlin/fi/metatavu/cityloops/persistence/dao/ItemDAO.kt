@@ -3,6 +3,7 @@ package fi.metatavu.cityloops.persistence.dao
 import fi.metatavu.cityloops.persistence.model.*
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
+import javax.persistence.TypedQuery
 import javax.persistence.criteria.Predicate
 import kotlin.collections.ArrayList
 
@@ -21,7 +22,7 @@ class ItemDAO() : AbstractDAO<Item>() {
    * @param title item title
    * @param category category where this item belongs to
    * @param onlyForCompanies is this item available only for companies
-   * @param user item owned
+   * @param user item owner
    * @param metadata item metadata as string
    * @param thumbnailUrl item thumbnail url
    * @param properties item key value property pairs as string
@@ -148,8 +149,6 @@ class ItemDAO() : AbstractDAO<Item>() {
     val root = criteria.from(Item::class.java)
     val restrictions = ArrayList<Predicate>()
 
-    criteria.select(root)
-
     if (returnOldestFirst == true) {
       criteria.orderBy(criteriaBuilder.asc(root.get(Item_.createdAt)))
     } else {
@@ -160,8 +159,10 @@ class ItemDAO() : AbstractDAO<Item>() {
       restrictions.add(criteriaBuilder.equal(root.get(Item_.user), user))
     }
 
-    val query = entityManager.createQuery(criteria)
+    criteria.select(root)
+    criteria.where(*restrictions.toTypedArray())
 
+    val query: TypedQuery<Item> = entityManager.createQuery<Item>(criteria)
     if (firstResult != null) {
       query.firstResult = firstResult
     }
@@ -169,7 +170,8 @@ class ItemDAO() : AbstractDAO<Item>() {
     if (maxResults != null) {
       query.maxResults = maxResults
     }
-
     return query.resultList
+
+
   }
 }

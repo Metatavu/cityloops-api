@@ -72,12 +72,12 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
   override fun listItems(userId: UUID?, firstResult: Int?, maxResults: Int?, sortByDateReturnOldestFirst: Boolean?): Response {
     loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
 
-    var foundUser: fi.metatavu.cityloops.persistence.model.User? = null
+    var user: fi.metatavu.cityloops.persistence.model.User? = null
     if (userId != null) {
-      foundUser = userController.findUserById(userId) ?: return createNotFound("User with ID: $userId could not be found")
+      user = userController.findUserById(userId) ?: return createNotFound("User with ID: $userId could not be found")
     }
 
-    val items = itemController.listItems(firstResult, maxResults, sortByDateReturnOldestFirst, foundUser)
+    val items = itemController.listItems(firstResult, maxResults, sortByDateReturnOldestFirst, user)
     return createOk(items.map(itemTranslator::translate))
   }
 

@@ -86,6 +86,7 @@ class ItemController {
    * @param firstResult index of the first result
    * @param maxResults limit amount of results to this number
    * @param returnOldestFirst return oldest result first
+   * @param user filter by user
    *
    * @return list of categories
    */
