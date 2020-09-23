@@ -12,7 +12,7 @@ import javax.inject.Inject
 import javax.ws.rs.core.Response
 
 /**
- * Categories API REST endpoints
+ * Users API REST endpoints
  *
  * @author Jari Nykänen
  */
