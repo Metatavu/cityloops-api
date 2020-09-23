@@ -25,7 +25,7 @@ class CategoryDAO() : AbstractDAO<Category>() {
    * @param parentCategory parent category
    * @param creatorId creator's id
    * @param lastModifierId last modifier's id
-   * @return created sub layout
+   * @return created user
    */
   fun create(id: UUID, name: String, parentCategory: Category?, creatorId: UUID, lastModifierId: UUID): Category {
     val category = Category()

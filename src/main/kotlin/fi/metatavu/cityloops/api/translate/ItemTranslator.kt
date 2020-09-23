@@ -32,6 +32,7 @@ class ItemTranslator: AbstractTranslator<fi.metatavu.cityloops.persistence.model
     result.title = entity.title
     result.category = entity.category?.id
     result.onlyForCompanies = entity.onlyForCompanies
+    result.userId = entity.user?.id!!
     result.metadata = getMetadata(entity.metadata)
     result.images = imagesUrls
     result.thumbnailUrl = entity.thumbnailUrl

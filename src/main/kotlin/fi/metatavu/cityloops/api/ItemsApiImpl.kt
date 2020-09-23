@@ -7,6 +7,7 @@ import fi.metatavu.cityloops.api.translate.ItemTranslator
 import fi.metatavu.cityloops.controllers.CategoryController
 import fi.metatavu.cityloops.controllers.ItemController
 import fi.metatavu.cityloops.controllers.ItemImageController
+import fi.metatavu.cityloops.controllers.UserController
 
 import java.util.*
 import javax.ejb.Stateful
@@ -35,14 +36,19 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
   @Inject
   private lateinit var itemTranslator: ItemTranslator
 
+  @Inject
+  private lateinit var userController: UserController
+
   override fun createItem(payload: Item?): Response {
-    val userId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    val keycloakUserId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
     payload ?: return createBadRequest("Missing request body")
 
     val title = payload.title
     val categoryId = payload.category ?: return createBadRequest("Missing category for item")
     val category = categoryController.findCategoryById(categoryId) ?: return createNotFound("Category with ID $categoryId not found")
     val onlyForCompanies = payload.onlyForCompanies
+    val userId = payload.userId
+    val user = userController.findUserById(userId) ?: return createNotFound("User with ID: $userId could not be found")
     val metadata =  payload.metadata
     val images = payload.images
     val thumbnailUrl = payload.thumbnailUrl
@@ -52,11 +58,12 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       title = title,
       category = category,
       onlyForCompanies = onlyForCompanies,
+      user = user,
       metadata = metadata,
       images = images,
       thumbnailUrl = thumbnailUrl,
       properties = itemProperties,
-      creatorId = userId
+      creatorId = keycloakUserId
     )
 
     return createOk(itemTranslator.translate(item))
@@ -65,8 +72,12 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
   override fun listItems(userId: UUID?, firstResult: Int?, maxResults: Int?, sortByDateReturnOldestFirst: Boolean?): Response {
     loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
 
-    // TODO: Implement user API-endpoint, add userID to items and implement item filtering by userID
-    val items = itemController.listItems(firstResult, maxResults, sortByDateReturnOldestFirst)
+    var foundUser: fi.metatavu.cityloops.persistence.model.User? = null
+    if (userId != null) {
+      foundUser = userController.findUserById(userId) ?: return createNotFound("User with ID: $userId could not be found")
+    }
+
+    val items = itemController.listItems(firstResult, maxResults, sortByDateReturnOldestFirst, foundUser)
     return createOk(items.map(itemTranslator::translate))
   }
 

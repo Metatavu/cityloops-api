@@ -37,13 +37,15 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
    * Creates new item with default values
    *
    * @param categoryId category ID
+   * @param userId user ID
    * @return created item
    */
-  fun create(categoryId: UUID): Item {
+  fun create(categoryId: UUID, userId: UUID): Item {
     val item = Item(
       title = "Default title",
       category = categoryId,
       onlyForCompanies = false,
+      userId = userId,
       metadata = Metadata()
     )
     return create(item)

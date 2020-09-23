@@ -1,9 +1,7 @@
 package fi.metatavu.cityloops.persistence.dao
 
-import fi.metatavu.cityloops.persistence.model.Category
+import fi.metatavu.cityloops.persistence.model.*
 import java.util.*
-import fi.metatavu.cityloops.persistence.model.Item
-import fi.metatavu.cityloops.persistence.model.Item_
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.criteria.Predicate
 import kotlin.collections.ArrayList
@@ -23,6 +21,7 @@ class ItemDAO() : AbstractDAO<Item>() {
    * @param title item title
    * @param category category where this item belongs to
    * @param onlyForCompanies is this item available only for companies
+   * @param user item owned
    * @param metadata item metadata as string
    * @param thumbnailUrl item thumbnail url
    * @param properties item key value property pairs as string
@@ -34,6 +33,7 @@ class ItemDAO() : AbstractDAO<Item>() {
     title: String,
     category: Category,
     onlyForCompanies: Boolean,
+    user: User,
     metadata: String?,
     thumbnailUrl: String?,
     properties: String?,
@@ -44,6 +44,7 @@ class ItemDAO() : AbstractDAO<Item>() {
     item.title = title
     item.category = category
     item.onlyForCompanies = onlyForCompanies
+    item.user = user
     item.metadata = metadata
     item.thumbnailUrl = thumbnailUrl
     item.properties = properties
@@ -136,10 +137,11 @@ class ItemDAO() : AbstractDAO<Item>() {
    * @param firstResult index of the first result
    * @param maxResults limit amount of results to this number
    * @param returnOldestFirst return oldest first
+   * @param user filter by user
    *
    * @return list of items
    */
-  fun list(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?): List<Item> {
+  fun list(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?): List<Item> {
     val entityManager = getEntityManager()
     val criteriaBuilder = entityManager.criteriaBuilder
     val criteria = criteriaBuilder.createQuery(Item::class.java)
@@ -152,6 +154,10 @@ class ItemDAO() : AbstractDAO<Item>() {
       criteria.orderBy(criteriaBuilder.asc(root.get(Item_.createdAt)))
     } else {
       criteria.orderBy(criteriaBuilder.desc(root.get(Item_.createdAt)))
+    }
+
+    if (user != null) {
+      restrictions.add(criteriaBuilder.equal(root.get(Item_.user), user))
     }
 
     val query = entityManager.createQuery(criteria)

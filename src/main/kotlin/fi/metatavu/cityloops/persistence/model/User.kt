@@ -6,37 +6,37 @@ import javax.persistence.*
 import javax.validation.constraints.NotEmpty
 
 /**
- * JPA entity representing item
+ * JPA entity representing user
  *
  * @author Jari Nykänen
  */
 @Entity
-class Item {
+class User {
 
   @Id
   var id: UUID? = null
 
   @NotEmpty
   @Column(nullable = false)
-  var title: String? = null
+  var name: String? = null
 
-  @ManyToOne
-  var category: Category? = null
+  @NotEmpty
+  @Column(nullable = false)
+  var address: String? = null
+
+  @NotEmpty
+  @Column(nullable = false)
+  var email: String? = null
+
+  @NotEmpty
+  @Column(nullable = false)
+  var phoneNumber: String? = null
 
   @Column(nullable = false)
-  var onlyForCompanies: Boolean? = null
+  var companyAccount: Boolean? = null
 
   @Column(nullable = false)
-  var metadata: String? = null
-
-  @Column(nullable = false)
-  var thumbnailUrl: String? = null
-
-  @Column(nullable = false)
-  var properties: String? = null
-
-  @ManyToOne
-  var user: User? = null
+  var verified: Boolean? = null
 
   @Column(nullable = false)
   var createdAt: OffsetDateTime? = null
