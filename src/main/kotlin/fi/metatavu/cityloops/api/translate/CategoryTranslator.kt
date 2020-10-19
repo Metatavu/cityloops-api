@@ -31,7 +31,7 @@ class CategoryTranslator: AbstractTranslator<fi.metatavu.cityloops.persistence.m
    * Reads category properties string as category property spec object
    *
    * @param data string data
-   * @return event triggers object
+   * @return list of category properties
    */
   private fun getCategoryProperties(data: String?): List<CategoryProperty> {
     data ?: return listOf()
