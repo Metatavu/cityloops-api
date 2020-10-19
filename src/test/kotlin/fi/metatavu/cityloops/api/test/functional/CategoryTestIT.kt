@@ -1,6 +1,8 @@
 package fi.metatavu.cityloops.api.test.functional
 
 import fi.metatavu.cityloops.api.client.models.Category
+import fi.metatavu.cityloops.api.client.models.CategoryInputType
+import fi.metatavu.cityloops.api.client.models.CategoryProperty
 import org.junit.Test
 import org.junit.Assert.*
 import java.util.*
@@ -98,13 +100,29 @@ class CategoryTestIT: AbstractFunctionalTest() {
 
       val categoryToUpdate = Category (
         id = categoryId,
-        name = "Updated category name"
+        name = "Updated category name",
+        properties = arrayOf(
+          CategoryProperty(
+            name = "Property name",
+            type = CategoryInputType.tEXT,
+            required = false,
+            defaultValue = "Default value",
+            infoText = "Additional info of this property",
+            unit = "cm"
+          )
+        )
       )
 
       val updatedCategory = it.admin().categories().updateCategory(categoryId = categoryId, payload = categoryToUpdate)
       assertNotNull(updatedCategory)
       assertEquals(categoryId, updatedCategory?.id)
       assertEquals(categoryToUpdate.name, updatedCategory?.name)
+      assertEquals(categoryToUpdate.properties?.get(0)?.name, updatedCategory?.properties?.get(0)?.name)
+      assertEquals(categoryToUpdate.properties?.get(0)?.type, updatedCategory?.properties?.get(0)?.type)
+      assertEquals(categoryToUpdate.properties?.get(0)?.required, updatedCategory?.properties?.get(0)?.required)
+      assertEquals(categoryToUpdate.properties?.get(0)?.defaultValue, updatedCategory?.properties?.get(0)?.defaultValue)
+      assertEquals(categoryToUpdate.properties?.get(0)?.infoText, updatedCategory?.properties?.get(0)?.infoText)
+      assertEquals(categoryToUpdate.properties?.get(0)?.unit, updatedCategory?.properties?.get(0)?.unit)
     }
   }
 

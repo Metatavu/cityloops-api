@@ -23,15 +23,17 @@ class CategoryDAO() : AbstractDAO<Category>() {
    * @param id id
    * @param name category name
    * @param parentCategory parent category
+   * @param properties category properties
    * @param creatorId creator's id
    * @param lastModifierId last modifier's id
    * @return created user
    */
-  fun create(id: UUID, name: String, parentCategory: Category?, creatorId: UUID, lastModifierId: UUID): Category {
+  fun create(id: UUID, name: String, parentCategory: Category?, properties: String?, creatorId: UUID, lastModifierId: UUID): Category {
     val category = Category()
     category.id = id
     category.name = name
     category.parentCategoryId = parentCategory?.id
+    category.properties = properties
     category.creatorId = creatorId
     category.lastModifierId = lastModifierId
     return persist(category)
@@ -64,6 +66,7 @@ class CategoryDAO() : AbstractDAO<Category>() {
   /**
    * Updates category name
    *
+   * @param category category to update
    * @param name new category name
    * @param lastModifierId last modifier's id
    * @return updated category
@@ -77,6 +80,7 @@ class CategoryDAO() : AbstractDAO<Category>() {
   /**
    * Updates parent category
    *
+   * @param category category to update
    * @param parentCategory parent category name
    * @param lastModifierId last modifier's id
    * @return updated category
@@ -84,6 +88,20 @@ class CategoryDAO() : AbstractDAO<Category>() {
   fun updateParentCategory(category: Category, parentCategory: Category?, lastModifierId: UUID): Category {
     category.lastModifierId = lastModifierId
     category.parentCategoryId = parentCategory?.id
+    return persist(category)
+  }
+
+  /**
+   * Updates category properties
+   *
+   * @param category category to update
+   * @param properties category properties
+   * @param lastModifierId last modifier's id
+   * @return updated category
+   */
+  fun updateProperties(category: Category, properties: String?, lastModifierId: UUID): Category {
+    category.lastModifierId = lastModifierId
+    category.properties = properties
     return persist(category)
   }
 }

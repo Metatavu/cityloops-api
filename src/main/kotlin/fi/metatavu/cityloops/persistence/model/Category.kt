@@ -24,6 +24,9 @@ class Category {
   var parentCategoryId: UUID? = null
 
   @Column(nullable = false)
+  var properties: String? = null
+
+  @Column(nullable = false)
   var createdAt: OffsetDateTime? = null
 
   @Column(nullable = false)

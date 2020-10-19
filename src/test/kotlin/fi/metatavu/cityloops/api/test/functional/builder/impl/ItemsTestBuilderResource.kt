@@ -4,6 +4,7 @@ import fi.metatavu.cityloops.api.client.infrastructure.ApiClient
 import fi.metatavu.cityloops.api.client.apis.ItemsApi
 import fi.metatavu.cityloops.api.client.infrastructure.ClientException
 import fi.metatavu.cityloops.api.client.models.Item
+import fi.metatavu.cityloops.api.client.models.LocationInfo
 import fi.metatavu.cityloops.api.client.models.Metadata
 import fi.metatavu.cityloops.api.spec.model.Category
 import fi.metatavu.cityloops.api.test.functional.settings.TestSettings
@@ -46,7 +47,9 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
       category = categoryId,
       onlyForCompanies = false,
       userId = userId,
-      metadata = Metadata()
+      metadata = Metadata(
+        locationInfo = LocationInfo()
+      )
     )
     return create(item)
   }
