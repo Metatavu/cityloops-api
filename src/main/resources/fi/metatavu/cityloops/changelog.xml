@@ -122,4 +122,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="cateogryproperties" author="jari.nykanen">
+        <addColumn tableName="category">
+            <column name="properties" type="longtext"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

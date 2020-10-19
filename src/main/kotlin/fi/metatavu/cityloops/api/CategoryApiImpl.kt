@@ -30,7 +30,7 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
     payload ?: return createBadRequest("Missing request body")
 
     val newName = payload.name
-
+    val properties = payload.properties
     var newParentCategory: fi.metatavu.cityloops.persistence.model.Category? = null
     val parentCategoryId = payload.parentCategoryId
     if (parentCategoryId != null) {
@@ -40,6 +40,7 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
     val createdCategory = categoryController.createCategory(
       name = newName,
       parentCategory = newParentCategory,
+      properties = properties,
       creatorId = userId
     )
 
@@ -75,6 +76,7 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
     val foundCategory = categoryController.findCategoryById(id = categoryId) ?: return createNotFound("Could not find category with id: $categoryId")
 
     val newName = payload.name
+    val properties = payload.properties
     var newParentCategory: fi.metatavu.cityloops.persistence.model.Category? = null
     val parentCategoryId = payload.parentCategoryId
     if (parentCategoryId != null) {
@@ -85,6 +87,7 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
       category = foundCategory,
       name = newName,
       parentCategory = newParentCategory,
+      properties = properties,
       modifierId = userId
     )
 

@@ -2,6 +2,7 @@ package fi.metatavu.cityloops.api.test.functional
 
 import fi.metatavu.cityloops.api.client.models.Condition
 import fi.metatavu.cityloops.api.client.models.Item
+import fi.metatavu.cityloops.api.client.models.LocationInfo
 import fi.metatavu.cityloops.api.spec.model.Metadata
 import org.junit.Test
 import org.junit.Assert.*
@@ -36,7 +37,9 @@ class ItemTestIT: AbstractFunctionalTest() {
       val customItemToCreate = Item(
         title = "Custom title",
         category = categoryId,
-        metadata = fi.metatavu.cityloops.api.client.models.Metadata(),
+        metadata = fi.metatavu.cityloops.api.client.models.Metadata(
+          locationInfo = LocationInfo()
+        ),
         onlyForCompanies = true,
         userId = userId
       )
@@ -110,11 +113,13 @@ class ItemTestIT: AbstractFunctionalTest() {
         title = "Updated title",
         category = categoryId,
         metadata = fi.metatavu.cityloops.api.client.models.Metadata(
-          amount = 10,
-          additionalInfo = "Information",
-          condition = Condition.gOOD,
-          price = 10.00,
-          priceUnit = "€"
+          locationInfo = LocationInfo(
+            email = "example@email.com",
+            address = "Testaddress 1",
+            description = "Custom item description",
+            phone = "123456789456"
+          ),
+          amount = 10
         ),
         onlyForCompanies = true,
         userId = userId
@@ -129,10 +134,10 @@ class ItemTestIT: AbstractFunctionalTest() {
       assertEquals(itemToUpdate.category, updatedItem?.category)
       assertEquals(itemToUpdate.onlyForCompanies, updatedItem?.onlyForCompanies)
       assertEquals(itemToUpdate.metadata.amount, updatedItem?.metadata?.amount)
-      assertEquals(itemToUpdate.metadata.additionalInfo, updatedItem?.metadata?.additionalInfo)
-      assertEquals(itemToUpdate.metadata.condition, updatedItem?.metadata?.condition)
-      assertEquals(itemToUpdate.metadata.price, updatedItem?.metadata?.price)
-      assertEquals(itemToUpdate.metadata.priceUnit, updatedItem?.metadata?.priceUnit)
+      assertEquals(itemToUpdate.metadata.locationInfo.email, updatedItem?.metadata?.locationInfo?.email)
+      assertEquals(itemToUpdate.metadata.locationInfo.address, updatedItem?.metadata?.locationInfo?.address)
+      assertEquals(itemToUpdate.metadata.locationInfo.description, updatedItem?.metadata?.locationInfo?.description)
+      assertEquals(itemToUpdate.metadata.locationInfo.phone, updatedItem?.metadata?.locationInfo?.phone)
     }
   }
 
@@ -175,7 +180,9 @@ class ItemTestIT: AbstractFunctionalTest() {
       val customItemToCreate = Item(
         title = "Custom title",
         category = categoryId,
-        metadata = fi.metatavu.cityloops.api.client.models.Metadata(),
+        metadata = fi.metatavu.cityloops.api.client.models.Metadata(
+          LocationInfo()
+        ),
         onlyForCompanies = true,
         userId = userId,
         images = arrayOf("http://example.com/image1.png", "http://example.com/image2.png")

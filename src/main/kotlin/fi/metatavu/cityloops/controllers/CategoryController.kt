@@ -1,6 +1,7 @@
 package fi.metatavu.cityloops.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import fi.metatavu.cityloops.api.spec.model.CategoryProperty
 import fi.metatavu.cityloops.persistence.dao.CategoryDAO
 import fi.metatavu.cityloops.persistence.model.Category
 import java.util.*
@@ -23,11 +24,12 @@ class CategoryController {
    *
    * @param name category name
    * @param parentCategory parent category
+   * @param properties category properties
    * @param creatorId creating user id
    * @return created category
    */
-  fun createCategory(name: String, parentCategory: Category?, creatorId: UUID): Category {
-    return categoryDAO.create(UUID.randomUUID(), name, parentCategory, creatorId, creatorId)
+  fun createCategory(name: String, parentCategory: Category?, properties: List<CategoryProperty>, creatorId: UUID): Category {
+    return categoryDAO.create(UUID.randomUUID(), name, parentCategory, getDataAsString(properties), creatorId, creatorId)
   }
 
   /**
@@ -56,12 +58,14 @@ class CategoryController {
    * @param category category to be updated
    * @param name category name
    * @param parentCategory parent category
+   * @param properties category properties
    * @param modifierId modifying user id
    * @return updated category
    */
-  fun updateCategory(category: Category, name: String, parentCategory: Category?, modifierId: UUID): Category {
+  fun updateCategory(category: Category, name: String, parentCategory: Category?, properties: List<CategoryProperty>?, modifierId: UUID): Category {
     val result = categoryDAO.updateName(category, name, modifierId)
     categoryDAO.updateParentCategory(result, parentCategory, modifierId)
+    categoryDAO.updateProperties(result, getDataAsString(properties), modifierId)
     return result
   }
 
@@ -72,6 +76,17 @@ class CategoryController {
    */
   fun deleteCategory(category: Category) {
     return categoryDAO.delete(category)
+  }
+
+  /**
+   * Serializes the object into JSON string
+   *
+   * @param data category properties
+   * @return JSON string
+   */
+  private fun getDataAsString(data: List<CategoryProperty>?): String {
+    val objectMapper = ObjectMapper()
+    return objectMapper.writeValueAsString(data)
   }
 
 }
