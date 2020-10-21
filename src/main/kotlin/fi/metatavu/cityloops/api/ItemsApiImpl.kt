@@ -70,7 +70,6 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
   }
 
   override fun listItems(userId: UUID?, firstResult: Int?, maxResults: Int?, sortByDateReturnOldestFirst: Boolean?): Response {
-    loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
 
     var user: fi.metatavu.cityloops.persistence.model.User? = null
     if (userId != null) {

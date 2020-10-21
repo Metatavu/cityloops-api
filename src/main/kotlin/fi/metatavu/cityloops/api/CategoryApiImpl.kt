@@ -48,7 +48,6 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
   }
 
   override fun listCategories(parentCategoryId: UUID?): Response? {
-    loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
 
     var parentCategory: fi.metatavu.cityloops.persistence.model.Category? = null
     if (parentCategoryId != null) {
