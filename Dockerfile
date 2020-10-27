@@ -1,5 +1,5 @@
 FROM jboss/wildfly:18.0.1.Final
-ARG WILDFLY_VERSION=18.0.1.Final
+ARG WILDFLY_VERSION=21.0.0.Final
 
 ADD --chown=jboss ./build/libs/*.war /opt/jboss/wildfly/standalone/deployments/app.war
 ADD --chown=jboss ./docker-resources/entrypoint.sh /opt/docker/entrypoint.sh 
@@ -12,9 +12,8 @@ ADD --chown=jboss ./docker-resources/interfaces.cli /opt/docker/interfaces.cli
 
 RUN chmod a+x /opt/docker/entrypoint.sh
 
-ARG WILDFLY_VERSION=18.0.1.Final
 ARG MYSQL_MODULE_VERSION=8.0.17
-ARG KEYCLOAK_MODULE_VERSION=7.0.0
+ARG KEYCLOAK_MODULE_VERSION=11.0.2
 
 RUN curl -o /tmp/mysql-module.zip -L https://static.metatavu.io/wildfly/wildfly-${WILDFLY_VERSION}-mysql-module-${MYSQL_MODULE_VERSION}.zip
 RUN curl -o /tmp/keycloak-module.zip -L https://downloads.jboss.org/keycloak/${KEYCLOAK_MODULE_VERSION}/adapters/keycloak-oidc/keycloak-wildfly-adapter-dist-${KEYCLOAK_MODULE_VERSION}.zip

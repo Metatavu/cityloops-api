@@ -31,13 +31,14 @@ class UsersTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
   /**
    * Creates new user with default values
    *
+   * @param email user email
    * @return created user
    */
-  fun create(): User {
+  fun create(email: String): User {
     val user = User(
       name = "Default name",
       address = "Default address",
-      email = "example@email.com",
+      email = email,
       phoneNumber = "1234567890",
       companyAccount = false,
       verified = false

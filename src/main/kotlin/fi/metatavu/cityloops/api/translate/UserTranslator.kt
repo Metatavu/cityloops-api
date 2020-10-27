@@ -14,6 +14,7 @@ class UserTranslator: AbstractTranslator<fi.metatavu.cityloops.persistence.model
   override fun translate(entity: fi.metatavu.cityloops.persistence.model.User): fi.metatavu.cityloops.api.spec.model.User {
     val result = fi.metatavu.cityloops.api.spec.model.User()
     result.id = entity.id
+    result.keycloakId = entity.keycloakId
     result.name = entity.name
     result.address = entity.address
     result.email = entity.email

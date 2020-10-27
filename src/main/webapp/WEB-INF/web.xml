@@ -22,6 +22,27 @@
 
   <security-constraint>
     <web-resource-collection>
+      <web-resource-name>itemsList</web-resource-name>
+      <url-pattern>/v1/items/*</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>categoriesList</web-resource-name>
+      <url-pattern>/v1/categories/*</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>userCreate</web-resource-name>
+      <url-pattern>/v1/users/*</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+
+  <security-constraint>
+    <web-resource-collection>
       <web-resource-name>api</web-resource-name>
       <url-pattern>/v1/*</url-pattern>
     </web-resource-collection>

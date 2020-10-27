@@ -4,6 +4,7 @@ import fi.metatavu.cityloops.api.spec.CategoriesApi
 import fi.metatavu.cityloops.api.spec.UsersApi
 import fi.metatavu.cityloops.api.spec.model.User
 import fi.metatavu.cityloops.api.translate.UserTranslator
+import fi.metatavu.cityloops.controllers.KeycloakController
 import fi.metatavu.cityloops.controllers.UserController
 import java.util.*
 import javax.ejb.Stateful
@@ -26,25 +27,35 @@ class UsersApiImpl: UsersApi, AbstractApi() {
   @Inject
   private lateinit var userTranslator: UserTranslator
 
+  @Inject
+  private lateinit var keycloakController: KeycloakController
+
   override fun createUser(payload: User?): Response {
-    val userId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
     payload ?: return createBadRequest("Missing request body")
+    val email = payload.email ?: return createBadRequest("Missing email")
+
+    if (keycloakController.findUserByEmail(email) != null) {
+      return createBadRequest("User with given email $email already exists!")
+    }
+
+    val user = keycloakController.createUser(email, listOf("management"))
+    user ?: return createBadRequest("Failed to create user!")
+    val keycloakId = user.id ?: return createInternalServerError("Keycloak user didn't have ID")
 
     val name = payload.name
     val address = payload.address
-    val email = payload.email
     val phoneNumber = payload.phoneNumber
     val companyAccount = payload.companyAccount
     val verified = payload.verified
 
     val createdUser = userController.createUser(
       name = name,
+      keycloakId = keycloakId,
       address = address,
       email = email,
       phoneNumber = phoneNumber,
       companyAccount = companyAccount,
-      verified = verified,
-      creatorId = userId
+      verified = verified
     )
 
     return createOk(userTranslator.translate(createdUser))
@@ -98,6 +109,7 @@ class UsersApiImpl: UsersApi, AbstractApi() {
     userId ?: return createBadRequest("Missing user ID")
 
     val user = userController.findUserById(id = userId) ?: return createNotFound("Could not find user with id: $userId")
+    keycloakController.deleteUser(user.keycloakId.toString())
     userController.deleteUser(user)
     return createNoContent()
   }
