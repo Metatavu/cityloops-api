@@ -16,14 +16,13 @@ import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.core.Response
 
+
 /**
  * Abstract base class for all API services
  *
  * @author Jari Nykänen
  */
 abstract class AbstractApi {
-
-  protected val UNAUTHORIZED = "Unauthorized"
 
   /**
    * Returns list parameter as <E> translated by given translate function.
@@ -102,6 +101,53 @@ abstract class AbstractApi {
       val remoteUser = httpServletRequest.remoteUser ?: return null
       return UUID.fromString(remoteUser)
     }
+
+  /**
+   * Check if user has anonymous role
+   *
+   * @returns if user has anonymous role
+   */
+  protected val isAnonymous: Boolean
+    get() {
+      return hasRealmRole(ANONYMOUS_ROLE)
+    }
+
+  /**
+   * Check if user has user role
+   *
+   * @returns if user has user role
+   */
+  protected val isUser: Boolean
+    get() {
+      return hasRealmRole(USER_ROLE)
+    }
+
+  /**
+   * Check if user has admin role
+   *
+   * @returns if user has admin role
+   */
+  protected val isAdmin: Boolean
+    get() {
+      return hasRealmRole(ADMIN_ROLE)
+    }
+
+  /**
+   * Returns whether logged user has at least one of specified realm roles
+   *
+   * @param role role
+   * @return whether logged user has specified realm role or not
+   */
+  protected open fun hasRealmRole(vararg role: String?): Boolean {
+    val token = accessToken ?: return false
+    val realmAccess = token.realmAccess ?: return false
+    for (element in role) {
+      if (realmAccess.isUserInRole(element)) {
+        return true
+      }
+    }
+    return false
+  }
 
   /**
    * Constructs ok response
@@ -316,8 +362,8 @@ abstract class AbstractApi {
     }
 
   companion object {
-    protected const val NOT_FOUND_MESSAGE = "Not found"
-    protected const val UNAUTHORIZED = "Unauthorized"
-    protected const val FORBIDDEN = "Forbidden"
+    private const val ANONYMOUS_ROLE = "anonymous"
+    private const val USER_ROLE = "user"
+    private const val ADMIN_ROLE = "admin"
   }
 }

@@ -22,7 +22,6 @@ class UserDAO() : AbstractDAO<User>() {
    * Creates new user
    *
    * @param id id
-   * @param keycloakId keycloak id
    * @param name user name
    * @param address user address
    * @param email user email
@@ -34,7 +33,6 @@ class UserDAO() : AbstractDAO<User>() {
    */
   fun create(
     id: UUID,
-    keycloakId: UUID,
     name: String,
     address: String,
     email: String,
@@ -46,7 +44,6 @@ class UserDAO() : AbstractDAO<User>() {
     val user = User()
     user.id = id
     user.name = name
-    user.keycloakId = keycloakId
     user.address = address
     user.email = email
     user.phoneNumber = phoneNumber

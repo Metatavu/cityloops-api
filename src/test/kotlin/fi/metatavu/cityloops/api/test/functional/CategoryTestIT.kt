@@ -53,6 +53,9 @@ class CategoryTestIT: AbstractFunctionalTest() {
       val emptyList = it.admin().categories().list(null)
       assertEquals(0, emptyList.size)
 
+      val emptyListWithAnonymous = it.anonymousUser().categories().list(null)
+      assertEquals(0, emptyListWithAnonymous.size)
+
       val firstCategoryToCreate = Category(
         name = "Category 1"
       )
@@ -86,6 +89,9 @@ class CategoryTestIT: AbstractFunctionalTest() {
 
       val secondAllCategoryList = it.admin().categories().list(null)
       assertEquals(4, secondAllCategoryList.size)
+
+      val secondAllCategoryListWithAnonymous = it.anonymousUser().categories().list(null)
+      assertEquals(4, secondAllCategoryListWithAnonymous.size)
 
       val thirdSubCategoryList = it.admin().categories().list(category1.id)
       assertEquals(2, thirdSubCategoryList.size)

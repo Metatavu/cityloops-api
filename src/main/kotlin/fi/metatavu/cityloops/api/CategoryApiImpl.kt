@@ -26,7 +26,11 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
   private lateinit var categoryTranslator: CategoryTranslator
 
   override fun createCategory(payload: Category?): Response {
-    val userId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    val keycloakUserId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    if (!isUser) {
+      return createUnauthorized(FORBIDDEN)
+    }
+
     payload ?: return createBadRequest("Missing request body")
 
     val newName = payload.name
@@ -41,7 +45,7 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
       name = newName,
       parentCategory = newParentCategory,
       properties = properties,
-      creatorId = userId
+      creatorId = keycloakUserId
     )
 
     return createOk(categoryTranslator.translate(createdCategory))
@@ -49,7 +53,11 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
 
   override fun listCategories(parentCategoryId: UUID?): Response? {
 
-    var parentCategory: fi.metatavu.cityloops.persistence.model.Category? = null
+    if (!isAnonymous && !isUser) {
+      return createUnauthorized(FORBIDDEN)
+    }
+
+      var parentCategory: fi.metatavu.cityloops.persistence.model.Category? = null
     if (parentCategoryId != null) {
       parentCategory = categoryController.findCategoryById(parentCategoryId)
     }
@@ -60,7 +68,9 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
   }
 
   override fun findCategory(categoryId: UUID?): Response {
-    loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    if (!isUser) {
+      return createUnauthorized(FORBIDDEN)
+    }
     categoryId ?: return createBadRequest("Missing category ID")
 
     val foundCategory = categoryController.findCategoryById(id = categoryId) ?: return createNotFound("Could not find category with id: $categoryId")
@@ -68,7 +78,11 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
   }
 
   override fun updateCategory(categoryId: UUID?, payload: Category?): Response {
-    val userId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    val keycloakUserId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    if (!isUser) {
+      return createUnauthorized(FORBIDDEN)
+    }
+
     categoryId ?: return createBadRequest("Missing category ID")
     payload ?: return createBadRequest("Missing category payload")
 
@@ -87,19 +101,28 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
       name = newName,
       parentCategory = newParentCategory,
       properties = properties,
-      modifierId = userId
+      modifierId = keycloakUserId
     )
 
     return createOk(categoryTranslator.translate(updatedCategory))
   }
 
   override fun deleteCategory(categoryId: UUID?): Response {
-    loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    if (!isUser) {
+      return createUnauthorized(FORBIDDEN)
+    }
+
     categoryId ?: return createBadRequest("Missing category ID")
 
     val category = categoryController.findCategoryById(id = categoryId) ?: return createNotFound("Could not find category with id: $categoryId")
     categoryController.deleteCategory(category)
     return createNoContent()
+  }
+
+  companion object {
+    private const val NOT_FOUND_MESSAGE = "Not found"
+    private const val UNAUTHORIZED = "Unauthorized"
+    private const val FORBIDDEN = "Forbidden"
   }
 
 }

@@ -17,6 +17,10 @@ class UserTestIT: AbstractFunctionalTest() {
       val defaultUser = it.admin().users().create("email@example.com")
       assertNotNull(defaultUser)
 
+      val defaultUserWithAnonymous = it.anonymousUser().users().create("email1@example.com")
+      assertNotNull(defaultUserWithAnonymous)
+      it.admin().users().delete(defaultUserWithAnonymous.id!!)
+
       val userToCreate = User(
         name = "Custom name",
         address = "Custom address",
@@ -27,7 +31,6 @@ class UserTestIT: AbstractFunctionalTest() {
       )
 
       val createdUser = it.admin().users().create(userToCreate)
-      assertNotNull(createdUser.keycloakId)
       assertEquals(userToCreate.name, createdUser.name)
       assertEquals(userToCreate.address, createdUser.address)
       assertEquals(userToCreate.email, createdUser.email)

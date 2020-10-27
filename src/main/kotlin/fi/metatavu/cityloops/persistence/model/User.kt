@@ -16,9 +16,6 @@ class User {
   @Id
   var id: UUID? = null
 
-  @Column(nullable = false)
-  var keycloakId: UUID? = null
-
   @NotEmpty
   @Column(nullable = false)
   var name: String? = null

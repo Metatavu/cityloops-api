@@ -128,12 +128,4 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="keycloakidforuser" author="jari.nykanen">
-        <addColumn tableName="user">
-            <column name="keycloakId" type="binary(16)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-
 </databaseChangeLog>

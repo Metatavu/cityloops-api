@@ -23,6 +23,8 @@ class TestBuilder: AbstractTestBuilder<ApiClient> () {
 
   private var admin: TestBuilderAuthentication? = null
 
+  private var anonymous: TestBuilderAuthentication? = null
+
   override fun createTestBuilderAuthentication(testBuilder: AbstractTestBuilder<ApiClient>, accessTokenProvider: AccessTokenProvider): AuthorizedTestBuilderAuthentication<ApiClient> {
     return TestBuilderAuthentication(testBuilder, accessTokenProvider)
   }
@@ -47,5 +49,27 @@ class TestBuilder: AbstractTestBuilder<ApiClient> () {
     }
 
     return admin!!
+  }
+
+  /**
+   * Returns anonymous authenticated authentication resource
+   *
+   * @return anonymous authenticated authentication resource
+   * @throws IOException
+   */
+  @kotlin.jvm.Throws(IOException::class)
+  fun anonymousUser(): TestBuilderAuthentication {
+    if (anonymous == null) {
+      val authServerUrl = TestSettings.keycloakHost
+      val realm = TestSettings.keycloakRealm
+      val clientId = TestSettings.keycloakClientId
+      val anonymousUser = TestSettings.keycloakAnonymousUser
+      val anonymousPassword = TestSettings.keycloakAnonymousPass
+      val clientSecret = TestSettings.keycloakClientSecret
+
+      anonymous = TestBuilderAuthentication(this, KeycloakAccessTokenProvider(authServerUrl, realm, clientId, anonymousUser, anonymousPassword, clientSecret))
+    }
+
+    return anonymous!!
   }
 }

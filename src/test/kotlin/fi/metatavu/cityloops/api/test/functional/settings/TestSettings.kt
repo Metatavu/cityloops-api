@@ -54,4 +54,16 @@ object TestSettings {
    */
   val keycloakAdminPass: String
     get() = "test"
+
+  /**
+   * Returns Keycloak anonymous user
+   */
+  val keycloakAnonymousUser: String
+    get() = "anonymous"
+
+  /**
+   * Returns Keycloak anonymous password
+   */
+  val keycloakAnonymousPass: String
+    get() = "anonymous"
 }

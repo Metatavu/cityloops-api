@@ -53,6 +53,8 @@ class ItemTestIT: AbstractFunctionalTest() {
   @Test
   fun testListItems() {
     TestBuilder().use {
+      val emptyListForAnonymous = it.anonymousUser().items().list(null, null, null, null)
+      assertEquals(0, emptyListForAnonymous.size)
       val emptyList = it.admin().items().list(null, null, null, null)
       assertEquals(0, emptyList.size)
 
@@ -70,7 +72,9 @@ class ItemTestIT: AbstractFunctionalTest() {
 
       val itemWithSecondUserId = it.admin().items().create(categoryId, secondUserId)
       val listWithTreeItems = it.admin().items().list(null, null, null, null)
+      val listWithTreeItemsAnonymous = it.anonymousUser().items().list(null, null, null, null)
       assertEquals(3, listWithTreeItems.size)
+      assertEquals(3, listWithTreeItemsAnonymous.size)
 
       val firstItem = listWithTreeItems[0]
       val secondItem = listWithTreeItems[1]
