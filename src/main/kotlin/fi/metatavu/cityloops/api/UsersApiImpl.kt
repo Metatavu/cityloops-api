@@ -37,7 +37,7 @@ class UsersApiImpl: UsersApi, AbstractApi() {
     }
 
     payload ?: return createBadRequest("Missing request body")
-    val email = payload.email ?: return createBadRequest("Missing email")
+    val email = payload.email
 
     if (keycloakController.findUserByEmail(email) != null) {
       return createBadRequest("User with given email $email already exists!")
