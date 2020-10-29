@@ -1,8 +1,8 @@
 package fi.metatavu.cityloops.api.test.functional
 
 import fi.metatavu.cityloops.api.client.models.Category
-import fi.metatavu.cityloops.api.client.models.CategoryInputType
 import fi.metatavu.cityloops.api.client.models.CategoryProperty
+import fi.metatavu.cityloops.api.client.models.CategoryPropertyInputType
 import org.junit.Test
 import org.junit.Assert.*
 import java.util.*
@@ -110,7 +110,7 @@ class CategoryTestIT: AbstractFunctionalTest() {
         properties = arrayOf(
           CategoryProperty(
             name = "Property name",
-            type = CategoryInputType.tEXT,
+            type = CategoryPropertyInputType.tEXT,
             required = false,
             defaultValue = "Default value",
             infoText = "Additional info of this property",
