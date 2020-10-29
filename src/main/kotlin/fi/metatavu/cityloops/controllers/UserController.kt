@@ -21,33 +21,34 @@ class UserController {
   /**
    * Creates new user
    *
+   * @param id keycloak id
    * @param name user name
    * @param address user address
    * @param email user email
    * @param phoneNumber user phone number
    * @param companyAccount is this user used by company
    * @param verified is this user verified
-   * @param creatorId creator's id
    * @return created user
    */
   fun createUser(
+    id: String,
     name: String,
     address: String,
     email: String,
     phoneNumber: String,
     companyAccount: Boolean,
-    verified: Boolean,
-    creatorId: UUID
+    verified: Boolean
   ): User {
+    val keycloakId = UUID.fromString(id)
     return userDAO.create(
-      id = UUID.randomUUID(),
+      id = keycloakId,
       name = name,
       address = address,
       email = email,
       phoneNumber = phoneNumber,
       companyAccount = companyAccount,
       verified = verified,
-      creatorId = creatorId
+      creatorId = keycloakId
     )
   }
 

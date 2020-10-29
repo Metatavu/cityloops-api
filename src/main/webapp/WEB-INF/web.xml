@@ -26,12 +26,16 @@
       <url-pattern>/v1/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
+      <role-name>anonymous</role-name>
       <role-name>user</role-name>
+      <role-name>admin</role-name>
     </auth-constraint>
   </security-constraint>
 
   <security-role>
+    <role-name>anonymous</role-name>
     <role-name>user</role-name>
+    <role-name>admin</role-name>
   </security-role>
 
 </web-app>

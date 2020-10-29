@@ -4,6 +4,7 @@ import fi.metatavu.cityloops.api.spec.CategoriesApi
 import fi.metatavu.cityloops.api.spec.UsersApi
 import fi.metatavu.cityloops.api.spec.model.User
 import fi.metatavu.cityloops.api.translate.UserTranslator
+import fi.metatavu.cityloops.controllers.KeycloakController
 import fi.metatavu.cityloops.controllers.UserController
 import java.util.*
 import javax.ejb.Stateful
@@ -26,39 +27,58 @@ class UsersApiImpl: UsersApi, AbstractApi() {
   @Inject
   private lateinit var userTranslator: UserTranslator
 
+  @Inject
+  private lateinit var keycloakController: KeycloakController
+
   override fun createUser(payload: User?): Response {
-    val userId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+
+    if (!isAnonymous && !isUser) {
+      return createUnauthorized(FORBIDDEN)
+    }
+
     payload ?: return createBadRequest("Missing request body")
+    val email = payload.email
+
+    if (keycloakController.findUserByEmail(email) != null) {
+      return createBadRequest("User with given email $email already exists!")
+    }
+
+    val user = keycloakController.createUser(email, listOf("user"))
+    user ?: return createBadRequest("Failed to create user!")
+    val keycloakId = user.id ?: return createInternalServerError("Keycloak user didn't have ID")
 
     val name = payload.name
     val address = payload.address
-    val email = payload.email
     val phoneNumber = payload.phoneNumber
     val companyAccount = payload.companyAccount
     val verified = payload.verified
 
     val createdUser = userController.createUser(
+      id = keycloakId,
       name = name,
       address = address,
       email = email,
       phoneNumber = phoneNumber,
       companyAccount = companyAccount,
-      verified = verified,
-      creatorId = userId
+      verified = verified
     )
 
     return createOk(userTranslator.translate(createdUser))
   }
 
   override fun listUsers(companyAccount: Boolean?, verified: Boolean?): Response? {
-    loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    if (!isUser) {
+      return createUnauthorized(FORBIDDEN)
+    }
 
     val users = userController.listUsers(companyAccount, verified)
     return createOk(users.map(userTranslator::translate))
   }
 
   override fun findUser(userId: UUID?): Response {
-    loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    if (!isUser) {
+      return createUnauthorized(FORBIDDEN)
+    }
     userId ?: return createBadRequest("Missing user ID")
 
     val foundUser = userController.findUserById(id = userId) ?: return createNotFound("Could not find user with id: $userId")
@@ -67,6 +87,10 @@ class UsersApiImpl: UsersApi, AbstractApi() {
 
   override fun updateUser(userId: UUID?, payload: User?): Response {
     val keycloakUserId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    if (!isUser) {
+      return createUnauthorized(FORBIDDEN)
+    }
+
     userId ?: return createBadRequest("Missing user id")
     payload ?: return createBadRequest("Missing user payload")
 
@@ -94,12 +118,21 @@ class UsersApiImpl: UsersApi, AbstractApi() {
   }
 
   override fun deleteUser(userId: UUID?): Response {
-    loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    if (!isUser) {
+      return createUnauthorized(FORBIDDEN)
+    }
     userId ?: return createBadRequest("Missing user ID")
 
     val user = userController.findUserById(id = userId) ?: return createNotFound("Could not find user with id: $userId")
+    keycloakController.deleteUser(user.id.toString())
     userController.deleteUser(user)
     return createNoContent()
+  }
+
+  companion object {
+    private const val NOT_FOUND_MESSAGE = "Not found"
+    private const val UNAUTHORIZED = "Unauthorized"
+    private const val FORBIDDEN = "Forbidden"
   }
 
 }

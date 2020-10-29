@@ -14,8 +14,12 @@ class UserTestIT: AbstractFunctionalTest() {
   @Test
   fun testCreateUser() {
     TestBuilder().use {
-      val defaultUser = it.admin().users().create()
+      val defaultUser = it.admin().users().create("email@example.com")
       assertNotNull(defaultUser)
+
+      val defaultUserWithAnonymous = it.anonymousUser().users().create("email1@example.com")
+      assertNotNull(defaultUserWithAnonymous)
+      it.admin().users().delete(defaultUserWithAnonymous.id!!)
 
       val userToCreate = User(
         name = "Custom name",
@@ -27,7 +31,6 @@ class UserTestIT: AbstractFunctionalTest() {
       )
 
       val createdUser = it.admin().users().create(userToCreate)
-
       assertEquals(userToCreate.name, createdUser.name)
       assertEquals(userToCreate.address, createdUser.address)
       assertEquals(userToCreate.email, createdUser.email)
@@ -40,7 +43,7 @@ class UserTestIT: AbstractFunctionalTest() {
   @Test
   fun testFindUser() {
     TestBuilder().use {
-      val defaultUser = it.admin().users().create()
+      val defaultUser = it.admin().users().create("email@example.com")
       val foundUser = it.admin().users().findUser(defaultUser.id!!)
 
       assertNotNull(foundUser)
@@ -54,8 +57,8 @@ class UserTestIT: AbstractFunctionalTest() {
       val emptyList = it.admin().users().list(null, null)
       assertEquals(0, emptyList.size)
 
-      it.admin().users().create()
-      it.admin().users().create()
+      it.admin().users().create("email1@example.com")
+      it.admin().users().create("email2@example.com")
 
       val listWithTwoUsers = it.admin().users().list(null, null)
       assertEquals(2, listWithTwoUsers.size)
@@ -107,7 +110,7 @@ class UserTestIT: AbstractFunctionalTest() {
   @Test
   fun testUpdateUser() {
     TestBuilder().use {
-      val defaultUser = it.admin().users().create()
+      val defaultUser = it.admin().users().create("email@example.com")
       assertNotNull(defaultUser)
 
       val userToUpdate = User(
@@ -140,8 +143,8 @@ class UserTestIT: AbstractFunctionalTest() {
       val emptyList = it.admin().users().list(null, null)
       assertEquals(0, emptyList.size)
 
-      val firstUser = it.admin().users().create()
-      val secondUser = it.admin().users().create()
+      val firstUser = it.admin().users().create("email1@example.com")
+      val secondUser = it.admin().users().create("email2@example.com")
       val listWithTwoUsers = it.admin().users().list(null, null)
       assertEquals(2, listWithTwoUsers.size)
 

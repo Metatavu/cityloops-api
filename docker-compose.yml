@@ -16,7 +16,7 @@ services:
       MYSQL_USER: cityloops-api
       MYSQL_PASSWORD: password
   test-keycloak:
-    image: jboss/keycloak:8.0.1
+    image: jboss/keycloak:11.0.2
     environment:
       DB_VENDOR: MYSQL
       DB_ADDR: keycloak-mysql
@@ -51,6 +51,10 @@ services:
       KEYCLOAK_REALM: cityloops
       KEYCLOAK_RESOURCE: api
       KEYCLOAK_URL: http://test-keycloak:8080/auth
+      KEYCLOAK_ADMIN_RESOURCE: admin
+      KEYCLOAK_ADMIN_SECRET: 185ee8e8-9b6c-47eb-8533-678fc7934c80
+      KEYCLOAK_ADMIN_USERNAME: api
+      KEYCLOAK_ADMIN_PASSWORD: d0abd401-7781-46f0-8146-643f5f946256
       KUBERNETES_NAMESPACE: test
       FILE_STORAGE_PROVIDER: LOCAL
       LOCAL_FILE_STORAGE_PATH: /opt/uploads

@@ -17,7 +17,7 @@ class ItemTestIT: AbstractFunctionalTest() {
   fun testCreateItem() {
     TestBuilder().use {
       val categoryId = it.admin().categories().create().id!!
-      val userId = it.admin().users().create().id!!
+      val userId = it.admin().users().create("email@email.com").id!!
 
       val item = it.admin().items().create(categoryId, userId)
       assertNotNull(item)
@@ -28,7 +28,7 @@ class ItemTestIT: AbstractFunctionalTest() {
   fun testFindItem() {
     TestBuilder().use {
       val categoryId = it.admin().categories().create().id!!
-      val userId = it.admin().users().create().id!!
+      val userId = it.admin().users().create("email@example.com").id!!
       val itemId = it.admin().items().create(categoryId, userId).id!!
 
       val foundItem = it.admin().items().findItem(itemId)
@@ -53,11 +53,13 @@ class ItemTestIT: AbstractFunctionalTest() {
   @Test
   fun testListItems() {
     TestBuilder().use {
+      val emptyListForAnonymous = it.anonymousUser().items().list(null, null, null, null)
+      assertEquals(0, emptyListForAnonymous.size)
       val emptyList = it.admin().items().list(null, null, null, null)
       assertEquals(0, emptyList.size)
 
-      val userId = it.admin().users().create().id!!
-      val secondUserId = it.admin().users().create().id!!
+      val userId = it.admin().users().create("email1@example.com").id!!
+      val secondUserId = it.admin().users().create("email2@example.com").id!!
       val categoryId = it.admin().categories().create().id!!
 
       it.admin().items().create(categoryId, userId)
@@ -70,7 +72,9 @@ class ItemTestIT: AbstractFunctionalTest() {
 
       val itemWithSecondUserId = it.admin().items().create(categoryId, secondUserId)
       val listWithTreeItems = it.admin().items().list(null, null, null, null)
+      val listWithTreeItemsAnonymous = it.anonymousUser().items().list(null, null, null, null)
       assertEquals(3, listWithTreeItems.size)
+      assertEquals(3, listWithTreeItemsAnonymous.size)
 
       val firstItem = listWithTreeItems[0]
       val secondItem = listWithTreeItems[1]
@@ -105,7 +109,7 @@ class ItemTestIT: AbstractFunctionalTest() {
   fun testUpdateItem() {
     TestBuilder().use {
       val categoryId = it.admin().categories().create().id!!
-      val userId = it.admin().users().create().id!!
+      val userId = it.admin().users().create("email@example.com").id!!
       val itemId = it.admin().items().create(categoryId, userId).id!!
 
       val itemToUpdate = Item(
@@ -147,7 +151,7 @@ class ItemTestIT: AbstractFunctionalTest() {
       val firstList = it.admin().items().list(null, null, null, null)
       assertEquals(0, firstList.size)
 
-      val userId = it.admin().users().create().id!!
+      val userId = it.admin().users().create("email@example.com").id!!
       val categoryId = it.admin().categories().create().id!!
       val firstId = it.admin().items().create(categoryId, userId).id!!
 
@@ -174,7 +178,7 @@ class ItemTestIT: AbstractFunctionalTest() {
   @Test
   fun testAddItemImages() {
     TestBuilder().use {
-      val userId = it.admin().users().create().id!!
+      val userId = it.admin().users().create("email@example.com").id!!
       val categoryId = it.admin().categories().create().id!!
 
       val customItemToCreate = Item(

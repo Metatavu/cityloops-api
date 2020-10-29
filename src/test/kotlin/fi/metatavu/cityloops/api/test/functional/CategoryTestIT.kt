@@ -1,8 +1,8 @@
 package fi.metatavu.cityloops.api.test.functional
 
 import fi.metatavu.cityloops.api.client.models.Category
-import fi.metatavu.cityloops.api.client.models.CategoryInputType
 import fi.metatavu.cityloops.api.client.models.CategoryProperty
+import fi.metatavu.cityloops.api.client.models.CategoryPropertyInputType
 import org.junit.Test
 import org.junit.Assert.*
 import java.util.*
@@ -53,6 +53,9 @@ class CategoryTestIT: AbstractFunctionalTest() {
       val emptyList = it.admin().categories().list(null)
       assertEquals(0, emptyList.size)
 
+      val emptyListWithAnonymous = it.anonymousUser().categories().list(null)
+      assertEquals(0, emptyListWithAnonymous.size)
+
       val firstCategoryToCreate = Category(
         name = "Category 1"
       )
@@ -87,6 +90,9 @@ class CategoryTestIT: AbstractFunctionalTest() {
       val secondAllCategoryList = it.admin().categories().list(null)
       assertEquals(4, secondAllCategoryList.size)
 
+      val secondAllCategoryListWithAnonymous = it.anonymousUser().categories().list(null)
+      assertEquals(4, secondAllCategoryListWithAnonymous.size)
+
       val thirdSubCategoryList = it.admin().categories().list(category1.id)
       assertEquals(2, thirdSubCategoryList.size)
     }
@@ -104,7 +110,7 @@ class CategoryTestIT: AbstractFunctionalTest() {
         properties = arrayOf(
           CategoryProperty(
             name = "Property name",
-            type = CategoryInputType.tEXT,
+            type = CategoryPropertyInputType.tEXT,
             required = false,
             defaultValue = "Default value",
             infoText = "Additional info of this property",

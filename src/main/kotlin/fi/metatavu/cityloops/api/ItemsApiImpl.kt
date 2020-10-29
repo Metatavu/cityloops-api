@@ -41,6 +41,9 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
 
   override fun createItem(payload: Item?): Response {
     val keycloakUserId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    if (!isUser) {
+      return createUnauthorized(FORBIDDEN)
+    }
     payload ?: return createBadRequest("Missing request body")
 
     val title = payload.title
@@ -71,6 +74,10 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
 
   override fun listItems(userId: UUID?, firstResult: Int?, maxResults: Int?, sortByDateReturnOldestFirst: Boolean?): Response {
 
+    if (!isAnonymous && !isUser) {
+      return createUnauthorized(FORBIDDEN)
+    }
+
     var user: fi.metatavu.cityloops.persistence.model.User? = null
     if (userId != null) {
       user = userController.findUserById(userId) ?: return createNotFound("User with ID: $userId could not be found")
@@ -81,7 +88,6 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
   }
 
   override fun findItem(itemId: UUID?): Response {
-    loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
     itemId ?: return createBadRequest("Missing item ID")
 
     val item = itemController.findItemById(itemId) ?: return createNotFound("Item with ID: $itemId could not be found!")
@@ -89,7 +95,11 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
   }
 
   override fun updateItem(itemId: UUID?, payload: Item?): Response {
-    val userId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    val keycloakUserId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    if (!isUser) {
+      return createUnauthorized(FORBIDDEN)
+    }
+
     payload ?: return createBadRequest("Missing request body")
     itemId ?: return createBadRequest("Missing item ID")
 
@@ -112,18 +122,26 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       images = images,
       thumbnailUrl = thumbnailUrl,
       properties = itemProperties,
-      lastModifierId = userId
+      lastModifierId = keycloakUserId
     )
 
     return createOk(itemTranslator.translate(item))
   }
 
   override fun deleteItem(itemId: UUID?): Response {
-    loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
+    if (!isUser) {
+      return createUnauthorized(FORBIDDEN)
+    }
     itemId ?: return createBadRequest("Missing item ID")
 
     val item = itemController.findItemById(itemId) ?: return createNotFound("Item with ID: $itemId could not be found!")
     itemController.deleteItem(item)
     return createNoContent()
+  }
+
+  companion object {
+    private const val NOT_FOUND_MESSAGE = "Not found"
+    private const val UNAUTHORIZED = "Unauthorized"
+    private const val FORBIDDEN = "Forbidden"
   }
 }
