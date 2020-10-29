@@ -57,7 +57,7 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
       return createUnauthorized(FORBIDDEN)
     }
 
-      var parentCategory: fi.metatavu.cityloops.persistence.model.Category? = null
+    var parentCategory: fi.metatavu.cityloops.persistence.model.Category? = null
     if (parentCategoryId != null) {
       parentCategory = categoryController.findCategoryById(parentCategoryId)
     }
