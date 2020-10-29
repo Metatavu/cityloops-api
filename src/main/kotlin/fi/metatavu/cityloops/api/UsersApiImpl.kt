@@ -135,5 +135,4 @@ class UsersApiImpl: UsersApi, AbstractApi() {
     private const val FORBIDDEN = "Forbidden"
   }
 
-
 }
