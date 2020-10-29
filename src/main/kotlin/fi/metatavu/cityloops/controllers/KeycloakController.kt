@@ -99,8 +99,7 @@ class KeycloakController {
    * @param id keycloak id
    */
   fun deleteUser(id: String) {
-    val usersResource = keycloakClient.realm(realm).users()
-    usersResource.delete(id)
+    keycloakClient.realm(realm).users().delete(id)
   }
 
   /**
