@@ -43,7 +43,7 @@ class UsersApiImpl: UsersApi, AbstractApi() {
       return createBadRequest("User with given email $email already exists!")
     }
 
-    val user = keycloakController.createUser(email, listOf("user"))
+    val user = keycloakController.createUser(email)
     user ?: return createBadRequest("Failed to create user!")
     val keycloakId = user.id ?: return createInternalServerError("Keycloak user didn't have ID")
 

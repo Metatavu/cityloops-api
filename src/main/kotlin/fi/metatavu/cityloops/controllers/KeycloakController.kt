@@ -69,16 +69,14 @@ class KeycloakController {
    * Creates new Keycloak user
    *
    * @param email user email
-   * @param realmRoles list of realm roles
    * @return created user or null when creation has failed
    */
-  fun createUser(email: String, realmRoles: List<String>): UserRepresentation? {
+  fun createUser(email: String): UserRepresentation? {
     val usersResource = keycloakClient.realm(realm).users()
     val user = UserRepresentation()
     user.email = email
     user.username = email
     user.isEnabled = true
-    user.realmRoles = realmRoles
 
     try {
       val userId = getCreatedResponseId(usersResource.create(user))
