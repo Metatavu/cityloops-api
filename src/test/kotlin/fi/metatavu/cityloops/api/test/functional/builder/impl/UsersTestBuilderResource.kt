@@ -41,7 +41,8 @@ class UsersTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
       email = email,
       phoneNumber = "1234567890",
       companyAccount = false,
-      verified = false
+      verified = false,
+      password = "password"
     )
     return create(user)
   }

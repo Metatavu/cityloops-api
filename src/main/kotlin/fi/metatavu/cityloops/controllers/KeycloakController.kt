@@ -13,6 +13,7 @@ import org.apache.http.message.BasicNameValuePair
 import org.keycloak.OAuth2Constants
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.KeycloakBuilder
+import org.keycloak.representations.idm.CredentialRepresentation
 import org.keycloak.representations.idm.UserRepresentation
 import org.slf4j.Logger
 import java.io.IOException
@@ -69,16 +70,22 @@ class KeycloakController {
    * Creates new Keycloak user
    *
    * @param email user email
-   * @param realmRoles list of realm roles
+   * @param password user password
    * @return created user or null when creation has failed
    */
-  fun createUser(email: String, realmRoles: List<String>): UserRepresentation? {
+  fun createUser(email: String, password: String): UserRepresentation? {
     val usersResource = keycloakClient.realm(realm).users()
     val user = UserRepresentation()
     user.email = email
     user.username = email
     user.isEnabled = true
-    user.realmRoles = realmRoles
+
+    val credentialRepresentation = CredentialRepresentation()
+    credentialRepresentation.isTemporary = false
+    credentialRepresentation.value = password
+    credentialRepresentation.type = CredentialRepresentation.PASSWORD
+
+    user.credentials = listOf(credentialRepresentation)
 
     try {
       val userId = getCreatedResponseId(usersResource.create(user))

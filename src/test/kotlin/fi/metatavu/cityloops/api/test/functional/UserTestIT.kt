@@ -27,7 +27,8 @@ class UserTestIT: AbstractFunctionalTest() {
         email = "custom@email.com",
         phoneNumber = "9876543210",
         companyAccount = true,
-        verified = false
+        verified = false,
+        password = "custom_password"
       )
 
       val createdUser = it.admin().users().create(userToCreate)
@@ -69,7 +70,8 @@ class UserTestIT: AbstractFunctionalTest() {
         email = "custom@email.com",
         phoneNumber = "9876543210",
         companyAccount = true,
-        verified = true
+        verified = true,
+        password = "custom_password"
       )
 
       val createdUser = it.admin().users().create(userToCreate)
