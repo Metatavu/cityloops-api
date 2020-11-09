@@ -38,12 +38,13 @@ class UsersApiImpl: UsersApi, AbstractApi() {
 
     payload ?: return createBadRequest("Missing request body")
     val email = payload.email
+    val password = payload.password ?: return createBadRequest("Password is required!")
 
     if (keycloakController.findUserByEmail(email) != null) {
       return createBadRequest("User with given email $email already exists!")
     }
 
-    val user = keycloakController.createUser(email)
+    val user = keycloakController.createUser(email, password)
     user ?: return createBadRequest("Failed to create user!")
     val keycloakId = user.id ?: return createInternalServerError("Keycloak user didn't have ID")
 
