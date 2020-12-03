@@ -139,10 +139,11 @@ class ItemDAO() : AbstractDAO<Item>() {
    * @param maxResults limit amount of results to this number
    * @param returnOldestFirst return oldest first
    * @param user filter by user
+   * @param category filter by category
    *
    * @return list of items
    */
-  fun list(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?): List<Item> {
+  fun list(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?, category: Category?): List<Item> {
     val entityManager = getEntityManager()
     val criteriaBuilder = entityManager.criteriaBuilder
     val criteria = criteriaBuilder.createQuery(Item::class.java)
@@ -157,6 +158,10 @@ class ItemDAO() : AbstractDAO<Item>() {
 
     if (user != null) {
       restrictions.add(criteriaBuilder.equal(root.get(Item_.user), user))
+    }
+
+    if (category != null) {
+      restrictions.add(criteriaBuilder.equal(root.get(Item_.category), category))
     }
 
     criteria.select(root)
