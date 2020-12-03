@@ -72,7 +72,7 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     return createOk(itemTranslator.translate(item))
   }
 
-  override fun listItems(userId: UUID?, firstResult: Int?, maxResults: Int?, sortByDateReturnOldestFirst: Boolean?): Response {
+  override fun listItems(userId: UUID?, categoryId: UUID?, firstResult: Int?, maxResults: Int?, sortByDateReturnOldestFirst: Boolean?): Response {
 
     if (!isAnonymous && !isUser) {
       return createUnauthorized(FORBIDDEN)
@@ -83,7 +83,12 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       user = userController.findUserById(userId) ?: return createNotFound("User with ID: $userId could not be found")
     }
 
-    val items = itemController.listItems(firstResult, maxResults, sortByDateReturnOldestFirst, user)
+    var category: fi.metatavu.cityloops.persistence.model.Category? = null
+    if (categoryId != null) {
+      category = categoryController.findCategoryById(categoryId) ?: return createNotFound("Category with ID: $categoryId could not be found!")
+    }
+
+    val items = itemController.listItems(firstResult, maxResults, sortByDateReturnOldestFirst, user, category)
     return createOk(items.map(itemTranslator::translate))
   }
 

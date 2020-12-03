@@ -25,13 +25,14 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
    * List items. Can be filtered by user
    *
    * @param userId user id
+   * @param categoryId category id
    * @param firstResult index of the first result
    * @param maxResults limit amount of results to this number
    * @param returnOldestFirst return oldest first
    * @return list of items
    */
-  fun list(userId: UUID?, firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?): Array<Item> {
-    return api.listItems(userId, firstResult, maxResults, returnOldestFirst)
+  fun list(userId: UUID?, categoryId: UUID?, firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?): Array<Item> {
+    return api.listItems(userId, categoryId, firstResult, maxResults, returnOldestFirst)
   }
 
   /**
