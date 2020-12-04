@@ -26,6 +26,8 @@ class ItemDAO() : AbstractDAO<Item>() {
    * @param metadata item metadata as string
    * @param thumbnailUrl item thumbnail url
    * @param properties item key value property pairs as string
+   * @param price price of the item
+   * @param priceUnit price unit of the item
    * @param creatorId creator's id
    * @return created sub layout
    */
@@ -38,6 +40,8 @@ class ItemDAO() : AbstractDAO<Item>() {
     metadata: String?,
     thumbnailUrl: String?,
     properties: String?,
+    price: Double,
+    priceUnit: String,
     creatorId: UUID
   ): Item {
     val item = Item()
@@ -49,6 +53,8 @@ class ItemDAO() : AbstractDAO<Item>() {
     item.metadata = metadata
     item.thumbnailUrl = thumbnailUrl
     item.properties = properties
+    item.price = price
+    item.priceUnit = priceUnit
     item.creatorId = creatorId
     item.lastModifierId = creatorId
     return persist(item)
@@ -115,6 +121,32 @@ class ItemDAO() : AbstractDAO<Item>() {
    */
   fun updateThumbnailUrl(item: Item, thumbnailUrl: String?, lastModifierId: UUID): Item {
     item.thumbnailUrl = thumbnailUrl
+    item.lastModifierId = lastModifierId
+    return persist(item)
+  }
+
+  /**
+   * Updates item price
+   *
+   * @param price price of the item
+   * @param lastModifierId last modifier's id
+   * @return updated item
+   */
+  fun updatePrice(item: Item, price: Double, lastModifierId: UUID): Item {
+    item.price = price
+    item.lastModifierId = lastModifierId
+    return persist(item)
+  }
+
+  /**
+   * Updates item price unit
+   *
+   * @param priceUnit item price unit
+   * @param lastModifierId last modifier's id
+   * @return updated item
+   */
+  fun updatePriceUnit(item: Item, priceUnit: String, lastModifierId: UUID): Item {
+    item.priceUnit = priceUnit
     item.lastModifierId = lastModifierId
     return persist(item)
   }

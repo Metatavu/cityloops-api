@@ -50,7 +50,9 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
       userId = userId,
       metadata = Metadata(
         locationInfo = LocationInfo()
-      )
+      ),
+      priceUnit = "€",
+      price = 0.0
     )
     return create(item)
   }

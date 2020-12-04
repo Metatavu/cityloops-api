@@ -1,6 +1,7 @@
 package fi.metatavu.cityloops.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import fi.metatavu.cityloops.api.spec.model.Coordinates
 import fi.metatavu.cityloops.persistence.dao.UserDAO
 import fi.metatavu.cityloops.persistence.model.User
 import java.util.*
@@ -28,6 +29,9 @@ class UserController {
    * @param phoneNumber user phone number
    * @param companyAccount is this user used by company
    * @param verified is this user verified
+   * @param companyId company id
+   * @param officeInfo office info
+   * @param coordinates office coordinates
    * @return created user
    */
   fun createUser(
@@ -37,7 +41,10 @@ class UserController {
     email: String,
     phoneNumber: String,
     companyAccount: Boolean,
-    verified: Boolean
+    verified: Boolean,
+    companyId: String?,
+    officeInfo: String?,
+    coordinates: Coordinates?
   ): User {
     val keycloakId = UUID.fromString(id)
     return userDAO.create(
@@ -48,6 +55,9 @@ class UserController {
       phoneNumber = phoneNumber,
       companyAccount = companyAccount,
       verified = verified,
+      companyId = companyId,
+      officeInfo = officeInfo,
+      coordinates = getDataAsString(coordinates),
       creatorId = keycloakId
     )
   }
@@ -83,6 +93,9 @@ class UserController {
    * @param phoneNumber user phone number
    * @param companyAccount is this user used by company
    * @param verified us this user verified
+   * @param companyId company id
+   * @param officeInfo office info
+   * @param coordinates office coordinates
    * @param modifierId modifying user id
    * @return updated user
    */
@@ -94,6 +107,9 @@ class UserController {
     phoneNumber: String,
     companyAccount: Boolean,
     verified: Boolean,
+    companyId: String?,
+    officeInfo: String?,
+    coordinates: Coordinates?,
     modifierId: UUID
   ): User {
     val result = userDAO.updateName(user, name, modifierId)
@@ -102,6 +118,9 @@ class UserController {
     userDAO.updatePhoneNumber(result, phoneNumber, modifierId)
     userDAO.updateCompanyAccount(result, companyAccount, modifierId)
     userDAO.updateVerified(result, verified, modifierId)
+    userDAO.updateCompanyId(result, companyId, modifierId)
+    userDAO.updateOfficeInfo(result, officeInfo, modifierId)
+    userDAO.updateCoordinates(result, getDataAsString(coordinates), modifierId)
     return result
   }
 
@@ -112,6 +131,17 @@ class UserController {
    */
   fun deleteUser(user: User) {
     return userDAO.delete(user)
+  }
+
+  /**
+   * Serializes the object into JSON string
+   *
+   * @param data object
+   * @return JSON string
+   */
+  private fun <T> getDataAsString(data: T): String? {
+    val objectMapper = ObjectMapper()
+    return objectMapper.writeValueAsString(data)
   }
 
 }

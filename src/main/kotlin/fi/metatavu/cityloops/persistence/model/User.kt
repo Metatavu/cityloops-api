@@ -38,6 +38,15 @@ class User {
   @Column(nullable = false)
   var verified: Boolean? = null
 
+  @Column(nullable = true)
+  var companyId: String? = null
+
+  @Column(nullable = true)
+  var officeInfo: String? = null
+
+  @Column(nullable = true)
+  var coordinates: String? = null
+
   @Column(nullable = false)
   var createdAt: OffsetDateTime? = null
 

@@ -41,7 +41,9 @@ class ItemTestIT: AbstractFunctionalTest() {
           locationInfo = LocationInfo()
         ),
         onlyForCompanies = true,
-        userId = userId
+        userId = userId,
+        price = 0.0,
+        priceUnit = "€/kpl"
       )
 
       val customItem = it.admin().items().create(customItemToCreate)
@@ -131,7 +133,9 @@ class ItemTestIT: AbstractFunctionalTest() {
           amount = 10
         ),
         onlyForCompanies = true,
-        userId = userId
+        userId = userId,
+        price = 100.0,
+        priceUnit = "£/kpl"
       )
 
       val updatedItem = it.admin().items().updateItem(
@@ -147,6 +151,8 @@ class ItemTestIT: AbstractFunctionalTest() {
       assertEquals(itemToUpdate.metadata.locationInfo.address, updatedItem?.metadata?.locationInfo?.address)
       assertEquals(itemToUpdate.metadata.locationInfo.description, updatedItem?.metadata?.locationInfo?.description)
       assertEquals(itemToUpdate.metadata.locationInfo.phone, updatedItem?.metadata?.locationInfo?.phone)
+      assertEquals(itemToUpdate.price, updatedItem?.price)
+      assertEquals(itemToUpdate.priceUnit, updatedItem?.priceUnit)
     }
   }
 
@@ -194,7 +200,9 @@ class ItemTestIT: AbstractFunctionalTest() {
         ),
         onlyForCompanies = true,
         userId = userId,
-        images = arrayOf("http://example.com/image1.png", "http://example.com/image2.png")
+        images = arrayOf("http://example.com/image1.png", "http://example.com/image2.png"),
+        price = 0.0,
+        priceUnit = "€/kpl"
       )
 
       val createdItem = it.admin().items().create(customItemToCreate)
@@ -214,7 +222,9 @@ class ItemTestIT: AbstractFunctionalTest() {
           "http://example.com/image2.png",
           "http://example.com/image3.png",
           "http://example.com/image4.png"
-        )
+        ),
+        price = 0.0,
+        priceUnit = "€/kpl"
       )
 
       val updatedItem = it.admin().items().updateItem(itemId = createdItem.id!!, payload = customItemToUpdate)
