@@ -28,6 +28,9 @@ class UserDAO() : AbstractDAO<User>() {
    * @param phoneNumber user phone number
    * @param companyAccount is this user used by company
    * @param verified us this user verified
+   * @param companyId company id
+   * @param officeInfo office info
+   * @param coordinates office coordinates
    * @param creatorId creator's id
    * @return created user
    */
@@ -39,6 +42,9 @@ class UserDAO() : AbstractDAO<User>() {
     phoneNumber: String,
     companyAccount: Boolean,
     verified: Boolean,
+    companyId: String?,
+    officeInfo: String?,
+    coordinates: String?,
     creatorId: UUID
   ): User {
     val user = User()
@@ -165,6 +171,48 @@ class UserDAO() : AbstractDAO<User>() {
   fun updateVerified(user: User, verified: Boolean, lastModifierId: UUID): User {
     user.lastModifierId = lastModifierId
     user.verified = verified
+    return persist(user)
+  }
+
+  /**
+   * Updates user company ID
+   *
+   * @param user user object
+   * @param companyId new user company ID
+   * @param lastModifierId last modifier's id
+   * @return updated user
+   */
+  fun updateCompanyId(user: User, companyId: String?, lastModifierId: UUID): User {
+    user.lastModifierId = lastModifierId
+    user.companyId = companyId
+    return persist(user)
+  }
+
+  /**
+   * Updates user office info
+   *
+   * @param user user object
+   * @param officeInfo new user office info
+   * @param lastModifierId last modifier's id
+   * @return updated user
+   */
+  fun updateOfficeInfo(user: User, officeInfo: String?, lastModifierId: UUID): User {
+    user.lastModifierId = lastModifierId
+    user.officeInfo = officeInfo
+    return persist(user)
+  }
+
+  /**
+   * Updates user office coordinates
+   *
+   * @param user user object
+   * @param coordinates new user office coordinates
+   * @param lastModifierId last modifier's id
+   * @return updated user
+   */
+  fun updateCoordinates(user: User, coordinates: String?, lastModifierId: UUID): User {
+    user.lastModifierId = lastModifierId
+    user.coordinates = coordinates
     return persist(user)
   }
 }

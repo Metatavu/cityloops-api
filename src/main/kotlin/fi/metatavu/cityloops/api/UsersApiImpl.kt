@@ -53,6 +53,9 @@ class UsersApiImpl: UsersApi, AbstractApi() {
     val phoneNumber = payload.phoneNumber
     val companyAccount = payload.companyAccount
     val verified = payload.verified
+    val companyId = payload.companyId
+    val officeInfo = payload.officeInfo
+    val coordinates = payload.coordinates
 
     val createdUser = userController.createUser(
       id = keycloakId,
@@ -61,7 +64,10 @@ class UsersApiImpl: UsersApi, AbstractApi() {
       email = email,
       phoneNumber = phoneNumber,
       companyAccount = companyAccount,
-      verified = verified
+      verified = verified,
+      companyId = companyId,
+      officeInfo = officeInfo,
+      coordinates = coordinates
     )
 
     return createOk(userTranslator.translate(createdUser))
@@ -103,6 +109,9 @@ class UsersApiImpl: UsersApi, AbstractApi() {
     val phoneNumber = payload.phoneNumber
     val companyAccount = payload.companyAccount
     val verified = payload.verified
+    val companyId = payload.companyId
+    val officeInfo = payload.officeInfo
+    val coordinates = payload.coordinates
 
     val updatedUser = userController.updateUser(
       user = foundUser,
@@ -112,7 +121,10 @@ class UsersApiImpl: UsersApi, AbstractApi() {
       phoneNumber = phoneNumber,
       companyAccount = companyAccount,
       verified = verified,
-      modifierId = keycloakUserId
+      modifierId = keycloakUserId,
+      companyId = companyId,
+      officeInfo = officeInfo,
+      coordinates = coordinates
     )
 
     return createOk(userTranslator.translate(updatedUser))

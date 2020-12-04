@@ -35,6 +35,12 @@ class Item {
   @Column(nullable = false)
   var properties: String? = null
 
+  @Column(nullable = false)
+  var price: Double? = null
+
+  @Column(nullable = false)
+  var priceUnit: String? = null
+
   @ManyToOne
   var user: User? = null
 

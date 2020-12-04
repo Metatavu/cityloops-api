@@ -1,6 +1,7 @@
 package fi.metatavu.cityloops.api.test.functional
 
 import fi.metatavu.cityloops.api.client.models.Category
+import fi.metatavu.cityloops.api.client.models.Coordinates
 import fi.metatavu.cityloops.api.client.models.User
 import org.junit.Test
 import org.junit.Assert.*
@@ -28,7 +29,9 @@ class UserTestIT: AbstractFunctionalTest() {
         phoneNumber = "9876543210",
         companyAccount = true,
         verified = false,
-        password = "custom_password"
+        password = "custom_password",
+        companyId = "123123123-A",
+        officeInfo = "Some office info"
       )
 
       val createdUser = it.admin().users().create(userToCreate)
@@ -122,7 +125,10 @@ class UserTestIT: AbstractFunctionalTest() {
         email = "custom@email.com",
         phoneNumber = "9876543210",
         companyAccount = true,
-        verified = false
+        verified = false,
+        companyId = "123123123-A",
+        officeInfo = "Some office info",
+        coordinates = Coordinates(1.0, 1.0)
       )
 
       val updatedUser = it.admin().users().updateUser(
@@ -136,6 +142,9 @@ class UserTestIT: AbstractFunctionalTest() {
       assertEquals(userToUpdate.phoneNumber, updatedUser?.phoneNumber)
       assertEquals(userToUpdate.companyAccount, updatedUser?.companyAccount)
       assertEquals(userToUpdate.verified, updatedUser?.verified)
+      assertEquals(userToUpdate.companyId, updatedUser?.companyId)
+      assertEquals(userToUpdate.officeInfo, updatedUser?.officeInfo)
+      assertEquals(userToUpdate.coordinates, updatedUser?.coordinates)
     }
   }
 

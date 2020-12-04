@@ -40,6 +40,8 @@ class ItemController {
    * @param images list of images
    * @param thumbnailUrl item thumbnail url
    * @param properties item key value property pairs
+   * @param price price of the item
+   * @param priceUnit price unit of the item
    * @param creatorId creator's id
    * @return created item
    */
@@ -52,6 +54,8 @@ class ItemController {
     images: List<String>?,
     thumbnailUrl: String?,
     properties: List<ItemProperty>?,
+    price: Double,
+    priceUnit: String,
     creatorId: UUID
   ): Item {
     val item = itemDAO.create(
@@ -63,6 +67,8 @@ class ItemController {
       metadata = getDataAsString(metadata),
       thumbnailUrl = thumbnailUrl,
       properties = getDataAsString(properties),
+      price = price,
+      priceUnit = priceUnit,
       creatorId = creatorId
     )
 
@@ -106,6 +112,8 @@ class ItemController {
    * @param images list of images
    * @param thumbnailUrl item thumbnail url
    * @param properties item key value property pairs
+   * @param price price of the item
+   * @param priceUnit price unit of the item
    * @param lastModifierId last modifier user id
    * @return updated item
    */
@@ -118,6 +126,8 @@ class ItemController {
     images: List<String>?,
     thumbnailUrl: String?,
     properties: List<ItemProperty>?,
+    price: Double,
+    priceUnit: String,
     lastModifierId: UUID
   ): Item {
     val result = itemDAO.updateTitle(item, title, lastModifierId)
@@ -126,6 +136,8 @@ class ItemController {
     itemDAO.updateMetadata(result, getDataAsString(metadata), lastModifierId)
     itemDAO.updateThumbnailUrl(result, thumbnailUrl, lastModifierId)
     itemDAO.updateProperties(result, getDataAsString(properties), lastModifierId)
+    itemDAO.updatePrice(result, price, lastModifierId)
+    itemDAO.updatePriceUnit(result, priceUnit, lastModifierId)
     setItemImages(result, images)
     return result
   }

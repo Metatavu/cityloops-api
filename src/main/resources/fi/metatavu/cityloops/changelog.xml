@@ -128,4 +128,23 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="itemprice" author="jari.nykanen">
+        <addColumn tableName="item">
+            <column name="price" type="double"/>
+            <column name="priceUnit" type="varchar(191)"/>
+        </addColumn>
+
+        <sql>UPDATE item set price = 0.0</sql>
+        <sql>UPDATE item set priceUnit = '€'</sql>
+    </changeSet>
+
+
+    <changeSet id="missinguserfields" author="jari.nykanen">
+        <addColumn tableName="user">
+            <column name="companyId" type="varchar(191)"/>
+            <column name="officeInfo" type="varchar(191)"/>
+            <column name="coordinates" type="longtext"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

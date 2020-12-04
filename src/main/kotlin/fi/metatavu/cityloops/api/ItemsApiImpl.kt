@@ -56,6 +56,8 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     val images = payload.images
     val thumbnailUrl = payload.thumbnailUrl
     val itemProperties = payload.properties
+    val price = payload.price
+    val priceUnit = payload.priceUnit
 
     val item = itemController.createItem(
       title = title,
@@ -66,6 +68,8 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       images = images,
       thumbnailUrl = thumbnailUrl,
       properties = itemProperties,
+      price = price,
+      priceUnit = priceUnit,
       creatorId = keycloakUserId
     )
 
@@ -117,6 +121,8 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     val images = payload.images
     val thumbnailUrl = payload.thumbnailUrl
     val itemProperties = payload.properties
+    val price = payload.price
+    val priceUnit = payload.priceUnit
 
     val item = itemController.updateItem(
       item = foundItem,
@@ -127,6 +133,8 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       images = images,
       thumbnailUrl = thumbnailUrl,
       properties = itemProperties,
+      price = price,
+      priceUnit = priceUnit,
       lastModifierId = keycloakUserId
     )
 

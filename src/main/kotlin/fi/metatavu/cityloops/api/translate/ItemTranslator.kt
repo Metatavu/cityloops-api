@@ -37,6 +37,8 @@ class ItemTranslator: AbstractTranslator<fi.metatavu.cityloops.persistence.model
     result.images = imagesUrls
     result.thumbnailUrl = entity.thumbnailUrl
     result.properties = getItemProperties(entity.properties)
+    result.price = entity.price
+    result.priceUnit = entity.priceUnit
     result.creatorId = entity.creatorId
     result.lastModifierId = entity.lastModifierId
     result.createdAt = entity.createdAt
@@ -49,7 +51,7 @@ class ItemTranslator: AbstractTranslator<fi.metatavu.cityloops.persistence.model
    * Reads item properties string as item property spec object
    *
    * @param data string data
-   * @return event triggers object
+   * @return List of item properties
    */
   private fun getItemProperties(data: String?): List<ItemProperty> {
     data ?: return listOf()
