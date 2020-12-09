@@ -42,6 +42,9 @@ class ItemController {
    * @param properties item key value property pairs
    * @param price price of the item
    * @param priceUnit price unit of the item
+   * @param paymentMethod item payment method
+   * @param delivery is item deliverable
+   * @param deliveryPrice delivery price
    * @param creatorId creator's id
    * @return created item
    */
@@ -56,6 +59,9 @@ class ItemController {
     properties: List<ItemProperty>?,
     price: Double,
     priceUnit: String,
+    paymentMethod: String,
+    delivery: Boolean,
+    deliveryPrice: Double?,
     creatorId: UUID
   ): Item {
     val item = itemDAO.create(
@@ -69,6 +75,9 @@ class ItemController {
       properties = getDataAsString(properties),
       price = price,
       priceUnit = priceUnit,
+      paymentMethod = paymentMethod,
+      delivery = delivery,
+      deliveryPrice = deliveryPrice,
       creatorId = creatorId
     )
 
@@ -114,6 +123,9 @@ class ItemController {
    * @param properties item key value property pairs
    * @param price price of the item
    * @param priceUnit price unit of the item
+   * @param paymentMethod item payment method
+   * @param delivery is item deliverable
+   * @param deliveryPrice delivery price
    * @param lastModifierId last modifier user id
    * @return updated item
    */
@@ -128,6 +140,9 @@ class ItemController {
     properties: List<ItemProperty>?,
     price: Double,
     priceUnit: String,
+    paymentMethod: String,
+    delivery: Boolean,
+    deliveryPrice: Double?,
     lastModifierId: UUID
   ): Item {
     val result = itemDAO.updateTitle(item, title, lastModifierId)
@@ -138,6 +153,9 @@ class ItemController {
     itemDAO.updateProperties(result, getDataAsString(properties), lastModifierId)
     itemDAO.updatePrice(result, price, lastModifierId)
     itemDAO.updatePriceUnit(result, priceUnit, lastModifierId)
+    itemDAO.updatePaymentMethod(result, paymentMethod, lastModifierId)
+    itemDAO.updateDelivery(result, delivery, lastModifierId)
+    itemDAO.updateDeliveryPrice(result, deliveryPrice, lastModifierId)
     setItemImages(result, images)
     return result
   }

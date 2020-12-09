@@ -28,6 +28,9 @@ class ItemDAO() : AbstractDAO<Item>() {
    * @param properties item key value property pairs as string
    * @param price price of the item
    * @param priceUnit price unit of the item
+   * @param paymentMethod item payment method
+   * @param delivery item delivery
+   * @param deliveryPrice delivery price
    * @param creatorId creator's id
    * @return created sub layout
    */
@@ -42,6 +45,9 @@ class ItemDAO() : AbstractDAO<Item>() {
     properties: String?,
     price: Double,
     priceUnit: String,
+    paymentMethod: String,
+    delivery: Boolean,
+    deliveryPrice: Double?,
     creatorId: UUID
   ): Item {
     val item = Item()
@@ -55,6 +61,9 @@ class ItemDAO() : AbstractDAO<Item>() {
     item.properties = properties
     item.price = price
     item.priceUnit = priceUnit
+    item.paymentMethod = paymentMethod
+    item.delivery = delivery
+    item.deliveryPrice = deliveryPrice
     item.creatorId = creatorId
     item.lastModifierId = creatorId
     return persist(item)
@@ -147,6 +156,45 @@ class ItemDAO() : AbstractDAO<Item>() {
    */
   fun updatePriceUnit(item: Item, priceUnit: String, lastModifierId: UUID): Item {
     item.priceUnit = priceUnit
+    item.lastModifierId = lastModifierId
+    return persist(item)
+  }
+
+  /**
+   * Updates item payment method
+   *
+   * @param paymentMethod item payment method
+   * @param lastModifierId last modifier's id
+   * @return updated item
+   */
+  fun updatePaymentMethod(item: Item, paymentMethod: String, lastModifierId: UUID): Item {
+    item.paymentMethod = paymentMethod
+    item.lastModifierId = lastModifierId
+    return persist(item)
+  }
+
+  /**
+   * Updates item delivery
+   *
+   * @param delivery item delivery
+   * @param lastModifierId last modifier's id
+   * @return updated item
+   */
+  fun updateDelivery(item: Item, delivery: Boolean, lastModifierId: UUID): Item {
+    item.delivery = delivery
+    item.lastModifierId = lastModifierId
+    return persist(item)
+  }
+
+  /**
+   * Updates item delivery price
+   *
+   * @param deliveryPrice item delivery price
+   * @param lastModifierId last modifier's id
+   * @return updated item
+   */
+  fun updateDeliveryPrice(item: Item, deliveryPrice: Double?, lastModifierId: UUID): Item {
+    item.deliveryPrice = deliveryPrice
     item.lastModifierId = lastModifierId
     return persist(item)
   }
