@@ -43,7 +43,10 @@ class ItemTestIT: AbstractFunctionalTest() {
         onlyForCompanies = true,
         userId = userId,
         price = 0.0,
-        priceUnit = "€/kpl"
+        priceUnit = "€/kpl",
+        paymentMethod = "Cash only",
+        delivery = true,
+        deliveryPrice = 20.0
       )
 
       val customItem = it.admin().items().create(customItemToCreate)
@@ -135,7 +138,10 @@ class ItemTestIT: AbstractFunctionalTest() {
         onlyForCompanies = true,
         userId = userId,
         price = 100.0,
-        priceUnit = "£/kpl"
+        priceUnit = "£/kpl",
+        paymentMethod = "Cash & Credit card",
+        delivery = true,
+        deliveryPrice = 20.0
       )
 
       val updatedItem = it.admin().items().updateItem(
@@ -153,6 +159,9 @@ class ItemTestIT: AbstractFunctionalTest() {
       assertEquals(itemToUpdate.metadata.locationInfo.phone, updatedItem?.metadata?.locationInfo?.phone)
       assertEquals(itemToUpdate.price, updatedItem?.price)
       assertEquals(itemToUpdate.priceUnit, updatedItem?.priceUnit)
+      assertEquals(itemToUpdate.paymentMethod, updatedItem?.paymentMethod)
+      assertEquals(itemToUpdate.delivery, updatedItem?.delivery)
+      assertEquals(itemToUpdate.deliveryPrice, updatedItem?.deliveryPrice)
     }
   }
 
@@ -202,7 +211,9 @@ class ItemTestIT: AbstractFunctionalTest() {
         userId = userId,
         images = arrayOf("http://example.com/image1.png", "http://example.com/image2.png"),
         price = 0.0,
-        priceUnit = "€/kpl"
+        priceUnit = "€/kpl",
+        paymentMethod = "Cash only",
+        delivery = false
       )
 
       val createdItem = it.admin().items().create(customItemToCreate)
@@ -224,7 +235,9 @@ class ItemTestIT: AbstractFunctionalTest() {
           "http://example.com/image4.png"
         ),
         price = 0.0,
-        priceUnit = "€/kpl"
+        priceUnit = "€/kpl",
+        paymentMethod = "Cash only",
+        delivery = false
       )
 
       val updatedItem = it.admin().items().updateItem(itemId = createdItem.id!!, payload = customItemToUpdate)

@@ -138,13 +138,23 @@
         <sql>UPDATE item set priceUnit = '€'</sql>
     </changeSet>
 
-
     <changeSet id="missinguserfields" author="jari.nykanen">
         <addColumn tableName="user">
             <column name="companyId" type="varchar(191)"/>
             <column name="officeInfo" type="varchar(191)"/>
             <column name="coordinates" type="longtext"/>
         </addColumn>
+    </changeSet>
+
+    <changeSet id="itempaymentanddeliveryoptions" author="jari.nykanen">
+        <addColumn tableName="item">
+            <column name="paymentMethod" type="varchar(191)"/>
+            <column name="delivery" type="boolean"/>
+            <column name="deliveryPrice" type="double"/>
+        </addColumn>
+
+        <sql>UPDATE item set paymentMethod = 'Käteinen'</sql>
+        <sql>UPDATE item set delivery = false</sql>
     </changeSet>
 
 </databaseChangeLog>

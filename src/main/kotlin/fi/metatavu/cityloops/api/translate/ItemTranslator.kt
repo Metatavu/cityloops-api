@@ -39,6 +39,9 @@ class ItemTranslator: AbstractTranslator<fi.metatavu.cityloops.persistence.model
     result.properties = getItemProperties(entity.properties)
     result.price = entity.price
     result.priceUnit = entity.priceUnit
+    result.paymentMethod = entity.paymentMethod
+    result.delivery = entity.delivery
+    result.deliveryPrice = entity.deliveryPrice
     result.creatorId = entity.creatorId
     result.lastModifierId = entity.lastModifierId
     result.createdAt = entity.createdAt

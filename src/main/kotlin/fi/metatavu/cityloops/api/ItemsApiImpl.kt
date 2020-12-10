@@ -58,6 +58,9 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     val itemProperties = payload.properties
     val price = payload.price
     val priceUnit = payload.priceUnit
+    val paymentMethod = payload.paymentMethod
+    val delivery = payload.delivery
+    val deliveryPrice = payload.deliveryPrice
 
     val item = itemController.createItem(
       title = title,
@@ -70,6 +73,9 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       properties = itemProperties,
       price = price,
       priceUnit = priceUnit,
+      paymentMethod = paymentMethod,
+      delivery = delivery,
+      deliveryPrice = deliveryPrice,
       creatorId = keycloakUserId
     )
 
@@ -123,6 +129,9 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     val itemProperties = payload.properties
     val price = payload.price
     val priceUnit = payload.priceUnit
+    val paymentMethod = payload.paymentMethod
+    val delivery = payload.delivery
+    val deliveryPrice = payload.deliveryPrice
 
     val item = itemController.updateItem(
       item = foundItem,
@@ -135,6 +144,9 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       properties = itemProperties,
       price = price,
       priceUnit = priceUnit,
+      paymentMethod = paymentMethod,
+      delivery = delivery,
+      deliveryPrice = deliveryPrice,
       lastModifierId = keycloakUserId
     )
 

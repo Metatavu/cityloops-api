@@ -41,6 +41,15 @@ class Item {
   @Column(nullable = false)
   var priceUnit: String? = null
 
+  @Column(nullable = false)
+  var paymentMethod: String? = null
+
+  @Column(nullable = false)
+  var delivery: Boolean? = null
+
+  @Column(nullable = true)
+  var deliveryPrice: Double? = null
+
   @ManyToOne
   var user: User? = null
 
