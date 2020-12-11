@@ -4,6 +4,8 @@ import fi.metatavu.cityloops.api.spec.CategoriesApi
 import fi.metatavu.cityloops.api.spec.model.Category
 import fi.metatavu.cityloops.api.translate.CategoryTranslator
 import fi.metatavu.cityloops.controllers.CategoryController
+import fi.metatavu.cityloops.controllers.ItemController
+import fi.metatavu.cityloops.controllers.SearchHoundController
 import java.util.*
 import javax.ejb.Stateful
 import javax.enterprise.context.RequestScoped
@@ -25,9 +27,15 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
   @Inject
   private lateinit var categoryTranslator: CategoryTranslator
 
+  @Inject
+  private lateinit var itemController: ItemController
+
+  @Inject
+  private lateinit var searchHoundController: SearchHoundController
+
   override fun createCategory(payload: Category?): Response {
     val keycloakUserId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
-    if (!isUser) {
+    if (!isAdmin) {
       return createUnauthorized(FORBIDDEN)
     }
 
@@ -68,7 +76,7 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
   }
 
   override fun findCategory(categoryId: UUID?): Response {
-    if (!isUser) {
+    if (!isAnonymous && !isUser) {
       return createUnauthorized(FORBIDDEN)
     }
     categoryId ?: return createBadRequest("Missing category ID")
@@ -79,7 +87,7 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
 
   override fun updateCategory(categoryId: UUID?, payload: Category?): Response {
     val keycloakUserId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
-    if (!isUser) {
+    if (!isAdmin) {
       return createUnauthorized(FORBIDDEN)
     }
 
@@ -108,13 +116,40 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
   }
 
   override fun deleteCategory(categoryId: UUID?): Response {
-    if (!isUser) {
+    if (!isAdmin) {
       return createUnauthorized(FORBIDDEN)
     }
 
     categoryId ?: return createBadRequest("Missing category ID")
 
     val category = categoryController.findCategoryById(id = categoryId) ?: return createNotFound("Could not find category with id: $categoryId")
+
+    /**
+     * Delete all items related to this category
+     */
+    val items = itemController.listItems(
+      firstResult = null,
+      maxResults = null,
+      returnOldestFirst = null,
+      user = null,
+      category = category
+    )
+    items.forEach { item ->
+      itemController.deleteItem(item)
+    }
+
+    /**
+     * Delete all search hounds to this category
+     */
+    val searchHounds = searchHoundController.listSearchHounds(
+      user = null,
+      category = category,
+      notificationsOn = null
+    )
+    searchHounds.forEach { hound ->
+      searchHoundController.deleteSearchHound(hound)
+    }
+
     categoryController.deleteCategory(category)
     return createNoContent()
   }

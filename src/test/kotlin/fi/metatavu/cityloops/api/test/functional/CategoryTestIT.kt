@@ -5,7 +5,6 @@ import fi.metatavu.cityloops.api.client.models.CategoryProperty
 import fi.metatavu.cityloops.api.client.models.CategoryPropertyInputType
 import org.junit.Test
 import org.junit.Assert.*
-import java.util.*
 
 /**
  * JUnit tests for Category
@@ -150,7 +149,6 @@ class CategoryTestIT: AbstractFunctionalTest() {
       it.admin().categories().delete(categoryId = secondCategoryId)
       val categoryListAfterSecondDelete = it.admin().categories().list(null)
       assertEquals(0, categoryListAfterSecondDelete.size)
-
     }
   }
 

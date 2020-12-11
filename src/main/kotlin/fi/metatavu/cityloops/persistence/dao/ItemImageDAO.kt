@@ -22,7 +22,7 @@ class ItemImageDAO() : AbstractDAO<ItemImage>() {
    * @param id id
    * @param item item
    * @param url image url
-   * @return created sub layout
+   * @return created item
    */
   fun create(id: UUID, item: Item, url: String): ItemImage {
     val itemImage = ItemImage()
