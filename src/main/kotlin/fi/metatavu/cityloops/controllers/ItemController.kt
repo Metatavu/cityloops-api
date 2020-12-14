@@ -9,6 +9,7 @@ import fi.metatavu.cityloops.persistence.dao.ItemImageDAO
 import fi.metatavu.cityloops.persistence.model.Category
 import fi.metatavu.cityloops.persistence.model.Item
 import fi.metatavu.cityloops.persistence.model.User
+import java.time.OffsetDateTime
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -110,8 +111,8 @@ class ItemController {
    *
    * @return list of categories
    */
-  fun listItems(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?, category: Category?): List<Item> {
-    return itemDAO.list(firstResult, maxResults, returnOldestFirst, user, category)
+  fun listItems(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?, category: Category?, includeExpired: Boolean?): List<Item> {
+    return itemDAO.list(firstResult, maxResults, returnOldestFirst, user, category, includeExpired)
   }
 
   /**
@@ -166,6 +167,8 @@ class ItemController {
     paymentMethod: String,
     delivery: Boolean,
     deliveryPrice: Double?,
+    expired: Boolean,
+    expiresAt: OffsetDateTime,
     lastModifierId: UUID
   ): Item {
     val result = itemDAO.updateTitle(item, title, lastModifierId)
@@ -179,6 +182,8 @@ class ItemController {
     itemDAO.updatePaymentMethod(result, paymentMethod, lastModifierId)
     itemDAO.updateDelivery(result, delivery, lastModifierId)
     itemDAO.updateDeliveryPrice(result, deliveryPrice, lastModifierId)
+    itemDAO.updateExpires(result, expired, lastModifierId)
+    itemDAO.updateExpiresAt(result, expiresAt, lastModifierId)
     setItemImages(result, images)
     return result
   }

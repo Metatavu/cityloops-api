@@ -46,7 +46,8 @@ class ItemTestIT: AbstractFunctionalTest() {
         priceUnit = "€/kpl",
         paymentMethod = "Cash only",
         delivery = true,
-        deliveryPrice = 20.0
+        deliveryPrice = 20.0,
+        expired = false
       )
 
       val customItem = it.admin().items().create(customItemToCreate)
@@ -141,7 +142,8 @@ class ItemTestIT: AbstractFunctionalTest() {
         priceUnit = "£/kpl",
         paymentMethod = "Cash & Credit card",
         delivery = true,
-        deliveryPrice = 20.0
+        deliveryPrice = 20.0,
+        expired = false
       )
 
       val updatedItem = it.admin().items().updateItem(
@@ -213,7 +215,8 @@ class ItemTestIT: AbstractFunctionalTest() {
         price = 0.0,
         priceUnit = "€/kpl",
         paymentMethod = "Cash only",
-        delivery = false
+        delivery = false,
+        expired = false
       )
 
       val createdItem = it.admin().items().create(customItemToCreate)
@@ -237,7 +240,8 @@ class ItemTestIT: AbstractFunctionalTest() {
         price = 0.0,
         priceUnit = "€/kpl",
         paymentMethod = "Cash only",
-        delivery = false
+        delivery = false,
+        expired = false
       )
 
       val updatedItem = it.admin().items().updateItem(itemId = createdItem.id!!, payload = customItemToUpdate)

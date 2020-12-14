@@ -67,6 +67,8 @@ class ItemDAO() : AbstractDAO<Item>() {
     item.deliveryPrice = deliveryPrice
     item.creatorId = creatorId
     item.lastModifierId = creatorId
+    item.expired = false
+    item.expiresAt = OffsetDateTime.now().plusDays(30)
     return persist(item)
   }
 
@@ -176,6 +178,20 @@ class ItemDAO() : AbstractDAO<Item>() {
   }
 
   /**
+   * Updates item expiration date
+   *
+   * @param item item to update
+   * @param expiresAt datetime item expires
+   * @param lastModifierId last modifier's id
+   * @return updated item
+   */
+  fun updateExpiresAt(item: Item, expiresAt: OffsetDateTime, lastModifierId: UUID?): Item {
+    item.expiresAt = expiresAt;
+    item.lastModifierId = lastModifierId
+    return persist(item)
+  }
+
+  /**
    * Updates item payment method
    *
    * @param paymentMethod item payment method
@@ -227,6 +243,11 @@ class ItemDAO() : AbstractDAO<Item>() {
     return persist(item)
   }
 
+  /**
+   * Lists items that have their expiration date due and that are not yet expired
+   *
+   * @return list of items to expire
+   */
   fun listItemsToExpire(): List<Item> {
     val entityManager = getEntityManager()
     val criteriaBuilder = entityManager.criteriaBuilder
@@ -234,7 +255,7 @@ class ItemDAO() : AbstractDAO<Item>() {
     val root = criteria.from(Item::class.java)
     val restrictions = ArrayList<Predicate>()
     restrictions.add(criteriaBuilder.equal(root.get(Item_.expired), false))
-    restrictions.add(criteriaBuilder.greaterThanOrEqualTo(root.get(Item_.expiresAt), OffsetDateTime.now()))
+    restrictions.add(criteriaBuilder.lessThanOrEqualTo(root.get(Item_.expiresAt), OffsetDateTime.now()))
     criteria.select(root)
     criteria.where(*restrictions.toTypedArray())
     val query: TypedQuery<Item> = entityManager.createQuery<Item>(criteria)
@@ -252,7 +273,7 @@ class ItemDAO() : AbstractDAO<Item>() {
    *
    * @return list of items
    */
-  fun list(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?, category: Category?): List<Item> {
+  fun list(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?, category: Category?, includeExpired: Boolean?): List<Item> {
     val entityManager = getEntityManager()
     val criteriaBuilder = entityManager.criteriaBuilder
     val criteria = criteriaBuilder.createQuery(Item::class.java)
@@ -272,6 +293,8 @@ class ItemDAO() : AbstractDAO<Item>() {
     if (category != null) {
       restrictions.add(criteriaBuilder.equal(root.get(Item_.category), category))
     }
+
+    restrictions.add(criteriaBuilder.equal(root.get(Item_.expired), includeExpired ?: false))
 
     criteria.select(root)
     criteria.where(*restrictions.toTypedArray())

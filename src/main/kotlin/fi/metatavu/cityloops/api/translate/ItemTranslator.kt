@@ -45,6 +45,8 @@ class ItemTranslator: AbstractTranslator<fi.metatavu.cityloops.persistence.model
     result.creatorId = entity.creatorId
     result.lastModifierId = entity.lastModifierId
     result.createdAt = entity.createdAt
+    result.expired = entity.expired
+    result.expiresAt = entity.expiresAt
     result.modifiedAt = entity.modifiedAt
 
     return result

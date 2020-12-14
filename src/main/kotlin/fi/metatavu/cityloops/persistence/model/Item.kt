@@ -76,7 +76,6 @@ class Item {
    */
   @PrePersist
   fun onCreate() {
-    expiresAt = OffsetDateTime.now().plusDays(30)
     createdAt = OffsetDateTime.now()
     modifiedAt = OffsetDateTime.now()
   }

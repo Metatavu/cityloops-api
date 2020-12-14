@@ -32,7 +32,7 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
    * @return list of items
    */
   fun list(userId: UUID?, categoryId: UUID?, firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?): Array<Item> {
-    return api.listItems(userId, categoryId, firstResult, maxResults, returnOldestFirst)
+    return api.listItems(userId, categoryId, firstResult, maxResults, returnOldestFirst, false)
   }
 
   /**
@@ -54,7 +54,8 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
       priceUnit = "€",
       price = 0.0,
       paymentMethod = "Cash only",
-      delivery = false
+      delivery = false,
+      expired = false
     )
     return create(item)
   }
