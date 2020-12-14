@@ -1,6 +1,7 @@
 package fi.metatavu.cityloops.persistence.dao
 
 import fi.metatavu.cityloops.persistence.model.*
+import java.time.OffsetDateTime
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.TypedQuery
@@ -161,6 +162,20 @@ class ItemDAO() : AbstractDAO<Item>() {
   }
 
   /**
+   * Updates item expired status
+   *
+   * @param item item to update
+   * @param expired is item expired or not
+   * @param lastModifierId last modifier's id
+   * @return updated item
+   */
+  fun updateExpires(item: Item, expired: Boolean, lastModifierId: UUID?): Item {
+    item.expired = expired
+    item.lastModifierId = lastModifierId
+    return persist(item)
+  }
+
+  /**
    * Updates item payment method
    *
    * @param paymentMethod item payment method
@@ -210,6 +225,20 @@ class ItemDAO() : AbstractDAO<Item>() {
     item.properties = properties
     item.lastModifierId = lastModifierId
     return persist(item)
+  }
+
+  fun listItemsToExpire(): List<Item> {
+    val entityManager = getEntityManager()
+    val criteriaBuilder = entityManager.criteriaBuilder
+    val criteria = criteriaBuilder.createQuery(Item::class.java)
+    val root = criteria.from(Item::class.java)
+    val restrictions = ArrayList<Predicate>()
+    restrictions.add(criteriaBuilder.equal(root.get(Item_.expired), false))
+    restrictions.add(criteriaBuilder.greaterThanOrEqualTo(root.get(Item_.expiresAt), OffsetDateTime.now()))
+    criteria.select(root)
+    criteria.where(*restrictions.toTypedArray())
+    val query: TypedQuery<Item> = entityManager.createQuery<Item>(criteria)
+    return query.resultList
   }
 
   /**

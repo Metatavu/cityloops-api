@@ -3,6 +3,7 @@ package fi.metatavu.cityloops.controllers
 import com.fasterxml.jackson.databind.ObjectMapper
 import fi.metatavu.cityloops.api.spec.model.ItemProperty
 import fi.metatavu.cityloops.api.spec.model.Metadata
+import fi.metatavu.cityloops.notifications.NotificationController
 import fi.metatavu.cityloops.persistence.dao.ItemDAO
 import fi.metatavu.cityloops.persistence.dao.ItemImageDAO
 import fi.metatavu.cityloops.persistence.model.Category
@@ -28,6 +29,9 @@ class ItemController {
 
   @Inject
   private lateinit var itemImageController: ItemImageController
+
+  @Inject
+  private lateinit var notificationController: NotificationController;
 
   /**
    * Creates new item
@@ -108,6 +112,25 @@ class ItemController {
    */
   fun listItems(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?, category: Category?): List<Item> {
     return itemDAO.list(firstResult, maxResults, returnOldestFirst, user, category)
+  }
+
+  /**
+   * Lists items to expire
+   *
+   * @return list of items to expire
+   */
+  fun listItemsToExpire(): List<Item> {
+    return itemDAO.listItemsToExpire();
+  }
+
+  /**
+   * Lists items to expire
+   *
+   * @return list of items to expire
+   */
+  fun expireItem(item: Item): Item {
+    notificationController.sendItemExpirationNotification(item)
+    return itemDAO.updateExpires(item, true, item.lastModifierId)
   }
 
   /**
