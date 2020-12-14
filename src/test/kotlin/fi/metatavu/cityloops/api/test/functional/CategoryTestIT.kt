@@ -3,9 +3,9 @@ package fi.metatavu.cityloops.api.test.functional
 import fi.metatavu.cityloops.api.client.models.Category
 import fi.metatavu.cityloops.api.client.models.CategoryProperty
 import fi.metatavu.cityloops.api.client.models.CategoryPropertyInputType
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
-import org.junit.Assert.*
-import java.util.*
 
 /**
  * JUnit tests for Category

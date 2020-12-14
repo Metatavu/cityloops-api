@@ -1,11 +1,10 @@
 package fi.metatavu.cityloops.api.test.functional
 
-import fi.metatavu.cityloops.api.client.models.Condition
 import fi.metatavu.cityloops.api.client.models.Item
 import fi.metatavu.cityloops.api.client.models.LocationInfo
-import fi.metatavu.cityloops.api.spec.model.Metadata
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
-import org.junit.Assert.*
 import java.util.*
 
 /**
