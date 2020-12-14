@@ -6,6 +6,7 @@ import fi.metatavu.jaxrs.test.functional.builder.auth.AuthorizedTestBuilderAuthe
 import fi.metatavu.cityloops.api.client.infrastructure.ApiClient
 import fi.metatavu.cityloops.api.test.functional.builder.impl.CategoriesTestBuilderResource
 import fi.metatavu.cityloops.api.test.functional.builder.impl.ItemsTestBuilderResource
+import fi.metatavu.cityloops.api.test.functional.builder.impl.SearchHoundsTestBuilderResource
 import fi.metatavu.cityloops.api.test.functional.builder.impl.UsersTestBuilderResource
 import fi.metatavu.cityloops.api.test.functional.settings.TestSettings
 
@@ -25,6 +26,7 @@ class TestBuilderAuthentication(testBuilder: AbstractTestBuilder<ApiClient>, acc
   private var categories: CategoriesTestBuilderResource? = null
   private var items: ItemsTestBuilderResource? = null
   private var users: UsersTestBuilderResource? = null
+  private var searchHounds: SearchHoundsTestBuilderResource? = null
 
   /**
    * Creates a API client
@@ -75,6 +77,19 @@ class TestBuilderAuthentication(testBuilder: AbstractTestBuilder<ApiClient>, acc
     }
 
     return users!!
+  }
+
+  /**
+   * Returns a test builder resource for search hounds
+   *
+   * @return test builder resource for search hounds
+   */
+  fun searchHounds(): SearchHoundsTestBuilderResource {
+    if (searchHounds == null) {
+      searchHounds = SearchHoundsTestBuilderResource(testBuilder, accessTokenProvider, createClient())
+    }
+
+    return searchHounds!!
   }
 
 }

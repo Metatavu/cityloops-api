@@ -5,7 +5,7 @@
 clear
 echo "Console cleared"
 echo "Stopping old docker containers..."
-for i in `docker ps -qa`; do docker stop $i; docker rm $i; done;
+for i in `docker ps -qa`; do docker stop $i; done;
 echo "Containers stopped"
 
 cd ../api-spec/
