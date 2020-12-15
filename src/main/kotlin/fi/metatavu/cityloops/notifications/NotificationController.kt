@@ -2,7 +2,6 @@ package fi.metatavu.cityloops.notifications
 
 import fi.metatavu.cityloops.email.EmailSender
 import fi.metatavu.cityloops.persistence.model.Item
-import javax.ejb.Stateless
 import javax.enterprise.context.ApplicationScoped
 
 /**
@@ -12,7 +11,6 @@ import javax.enterprise.context.ApplicationScoped
  *
  */
 @ApplicationScoped
-@Stateless
 class NotificationController {
 
     private lateinit var emailSender: EmailSender
