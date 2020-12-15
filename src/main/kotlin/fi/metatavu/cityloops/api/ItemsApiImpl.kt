@@ -4,11 +4,7 @@ import fi.metatavu.cityloops.api.spec.ItemsApi
 import fi.metatavu.cityloops.api.spec.model.Item
 import fi.metatavu.cityloops.api.translate.CategoryTranslator
 import fi.metatavu.cityloops.api.translate.ItemTranslator
-import fi.metatavu.cityloops.controllers.CategoryController
-import fi.metatavu.cityloops.controllers.ItemController
-import fi.metatavu.cityloops.controllers.ItemImageController
-import fi.metatavu.cityloops.controllers.UserController
-import java.time.OffsetDateTime
+import fi.metatavu.cityloops.controllers.*
 
 import java.util.*
 import javax.ejb.Stateful
@@ -17,7 +13,7 @@ import javax.inject.Inject
 import javax.ws.rs.core.Response
 
 /**
- * Categories API REST endpoints
+ * Items API REST endpoints
  *
  * @author Jari Nykänen
  */
@@ -39,6 +35,9 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
 
   @Inject
   private lateinit var userController: UserController
+
+  @Inject
+  private lateinit var searchHoundController: SearchHoundController
 
   override fun createItem(payload: Item?): Response {
     val keycloakUserId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
@@ -80,6 +79,8 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       creatorId = keycloakUserId
     )
 
+    val searchHounds = searchHoundController.listSearchHounds(user = null, category = category, notificationsOn = true)
+    searchHoundController.sendNotifications(searchHounds)
     return createOk(itemTranslator.translate(item))
   }
 
@@ -167,6 +168,9 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       expiresAt = expiresAt,
       lastModifierId = keycloakUserId
     )
+
+    val searchHounds = searchHoundController.listSearchHounds(user = null, category = category, notificationsOn = true)
+    searchHoundController.sendNotifications(searchHounds)
 
     return createOk(itemTranslator.translate(item))
   }
