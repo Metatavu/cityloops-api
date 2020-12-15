@@ -157,4 +157,12 @@
         <sql>UPDATE item set delivery = false</sql>
     </changeSet>
 
+    <changeSet id="itemaddexpiredcolumns" author="Heikki Kurhinen">
+        <addColumn tableName="item">
+            <column name="expiresat" type="datetime(6)" />
+            <column name="expired" type="boolean"/>
+        </addColumn>
+        <sql>UPDATE item set expired = false</sql>
+    </changeSet>
+
 </databaseChangeLog>
