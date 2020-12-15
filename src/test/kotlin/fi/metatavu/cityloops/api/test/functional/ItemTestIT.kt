@@ -2,8 +2,9 @@ package fi.metatavu.cityloops.api.test.functional
 
 import fi.metatavu.cityloops.api.client.models.Item
 import fi.metatavu.cityloops.api.client.models.LocationInfo
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
-import org.junit.Assert.*
 import java.util.*
 
 /**
@@ -44,7 +45,8 @@ class ItemTestIT: AbstractFunctionalTest() {
         priceUnit = "€/kpl",
         paymentMethod = "Cash only",
         delivery = true,
-        deliveryPrice = 20.0
+        deliveryPrice = 20.0,
+        expired = false
       )
 
       val customItem = it.admin().items().create(customItemToCreate)
@@ -56,9 +58,9 @@ class ItemTestIT: AbstractFunctionalTest() {
   @Test
   fun testListItems() {
     TestBuilder().use {
-      val emptyListForAnonymous = it.anonymousUser().items().list(null, null, null, null, null)
+      val emptyListForAnonymous = it.anonymousUser().items().list(null, null, null, null, null, false)
       assertEquals(0, emptyListForAnonymous.size)
-      val emptyList = it.admin().items().list(null, null, null, null, null)
+      val emptyList = it.admin().items().list(null, null, null, null, null, false)
       assertEquals(0, emptyList.size)
 
       val userId = it.admin().users().create("email1@example.com").id!!
@@ -66,16 +68,16 @@ class ItemTestIT: AbstractFunctionalTest() {
       val categoryId = it.admin().categories().create().id!!
 
       it.admin().items().create(categoryId, userId)
-      val listWithOneItem = it.admin().items().list(null, null, null, null, null)
+      val listWithOneItem = it.admin().items().list(null, null, null, null, null, false)
       assertEquals(1, listWithOneItem.size)
 
       it.admin().items().create(categoryId, userId)
-      val listWithTwoItems = it.admin().items().list(null, null, null, null, null)
+      val listWithTwoItems = it.admin().items().list(null, null, null, null, null, false)
       assertEquals(2, listWithTwoItems.size)
 
       val itemWithSecondUserId = it.admin().items().create(categoryId, secondUserId)
-      val listWithTreeItems = it.admin().items().list(null, null, null, null, null)
-      val listWithTreeItemsAnonymous = it.anonymousUser().items().list(null, null, null, null, null)
+      val listWithTreeItems = it.admin().items().list(null, null, null, null, null, false)
+      val listWithTreeItemsAnonymous = it.anonymousUser().items().list(null, null, null, null, null, false)
       assertEquals(3, listWithTreeItems.size)
       assertEquals(3, listWithTreeItemsAnonymous.size)
 
@@ -91,24 +93,24 @@ class ItemTestIT: AbstractFunctionalTest() {
       assertEquals(true, idList.contains(secondItem.id))
       assertEquals(true, idList.contains(thirdItem.id))
 
-      val listWithFirstResult = it.admin().items().list(null, null, 1, null, null)
-      val listWithMaxResult = it.admin().items().list(null, null, null, 1, null)
+      val listWithFirstResult = it.admin().items().list(null, null, 1, null, null, false)
+      val listWithMaxResult = it.admin().items().list(null, null, null, 1, null, false)
 
       assertEquals(2, listWithFirstResult.size)
       assertEquals(1, listWithMaxResult.size)
 
       val categoryId2 = it.admin().categories().create().id!!
       it.admin().items().create(categoryId2, userId)
-      val listByOldestFirst = it.admin().items().list(null, null, null, null, true)
+      val listByOldestFirst = it.admin().items().list(null, null, null, null, true, false)
       assertEquals(categoryId2, listByOldestFirst.last().category)
 
-      val listByUser = it.admin().items().list(secondUserId, null, null, null, null)
+      val listByUser = it.admin().items().list(secondUserId, null, null, null, null, false)
       assertEquals(1, listByUser.size)
       assertEquals(itemWithSecondUserId.id!!, listByUser[0].id!!)
 
       val secondCategoryId = it.admin().categories().create().id!!
       it.admin().items().create(secondCategoryId, userId)
-      val listByCategory = it.admin().items().list(null,  secondCategoryId, null, null, null)
+      val listByCategory = it.admin().items().list(null,  secondCategoryId, null, null, null, false)
       assertEquals(1, listByCategory.size)
     }
   }
@@ -139,7 +141,8 @@ class ItemTestIT: AbstractFunctionalTest() {
         priceUnit = "£/kpl",
         paymentMethod = "Cash & Credit card",
         delivery = true,
-        deliveryPrice = 20.0
+        deliveryPrice = 20.0,
+        expired = false
       )
 
       val updatedItem = it.admin().items().updateItem(
@@ -166,29 +169,29 @@ class ItemTestIT: AbstractFunctionalTest() {
   @Test
   fun testDeleteItem() {
     TestBuilder().use {
-      val firstList = it.admin().items().list(null, null, null, null, null)
+      val firstList = it.admin().items().list(null, null, null, null, null, false)
       assertEquals(0, firstList.size)
 
       val userId = it.admin().users().create("email@example.com").id!!
       val categoryId = it.admin().categories().create().id!!
       val firstId = it.admin().items().create(categoryId, userId).id!!
 
-      val secondList = it.admin().items().list(null, null, null, null, null)
+      val secondList = it.admin().items().list(null, null, null, null, null, false)
       assertEquals(1, secondList.size)
 
       val secondId = it.admin().items().create(categoryId, userId).id!!
       val thirdId = it.admin().items().create(categoryId, userId).id!!
 
-      val thirdList = it.admin().items().list(null, null, null, null, null)
+      val thirdList = it.admin().items().list(null, null, null, null, null, false)
       assertEquals(3, thirdList.size)
 
       it.admin().items().delete(firstId)
-      val listAfterFirstDelete = it.admin().items().list(null, null, null, null, null)
+      val listAfterFirstDelete = it.admin().items().list(null, null, null, null, null, false)
       assertEquals(2, listAfterFirstDelete.size)
 
       it.admin().items().delete(secondId)
       it.admin().items().delete(thirdId)
-      val listAfterSecondDelete = it.admin().items().list(null, null, null, null, null)
+      val listAfterSecondDelete = it.admin().items().list(null, null, null, null, null, false)
       assertEquals(0, listAfterSecondDelete.size)
     }
   }
@@ -211,7 +214,8 @@ class ItemTestIT: AbstractFunctionalTest() {
         price = 0.0,
         priceUnit = "€/kpl",
         paymentMethod = "Cash only",
-        delivery = false
+        delivery = false,
+        expired = false
       )
 
       val createdItem = it.admin().items().create(customItemToCreate)
@@ -235,7 +239,8 @@ class ItemTestIT: AbstractFunctionalTest() {
         price = 0.0,
         priceUnit = "€/kpl",
         paymentMethod = "Cash only",
-        delivery = false
+        delivery = false,
+        expired = false
       )
 
       val updatedItem = it.admin().items().updateItem(itemId = createdItem.id!!, payload = customItemToUpdate)

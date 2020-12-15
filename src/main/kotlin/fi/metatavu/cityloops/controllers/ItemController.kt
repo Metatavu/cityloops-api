@@ -3,11 +3,13 @@ package fi.metatavu.cityloops.controllers
 import com.fasterxml.jackson.databind.ObjectMapper
 import fi.metatavu.cityloops.api.spec.model.ItemProperty
 import fi.metatavu.cityloops.api.spec.model.Metadata
+import fi.metatavu.cityloops.notifications.NotificationController
 import fi.metatavu.cityloops.persistence.dao.ItemDAO
 import fi.metatavu.cityloops.persistence.dao.ItemImageDAO
 import fi.metatavu.cityloops.persistence.model.Category
 import fi.metatavu.cityloops.persistence.model.Item
 import fi.metatavu.cityloops.persistence.model.User
+import java.time.OffsetDateTime
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -28,6 +30,9 @@ class ItemController {
 
   @Inject
   private lateinit var itemImageController: ItemImageController
+
+  @Inject
+  private lateinit var notificationController: NotificationController;
 
   /**
    * Creates new item
@@ -106,8 +111,27 @@ class ItemController {
    *
    * @return list of items
    */
-  fun listItems(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?, category: Category?): List<Item> {
-    return itemDAO.list(firstResult, maxResults, returnOldestFirst, user, category)
+  fun listItems(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?, category: Category?, includeExpired: Boolean?): List<Item> {
+    return itemDAO.list(firstResult, maxResults, returnOldestFirst, user, category, includeExpired)
+  }
+
+  /**
+   * Lists items to expire
+   *
+   * @return list of items to expire
+   */
+  fun listItemsToExpire(): List<Item> {
+    return itemDAO.listItemsToExpire();
+  }
+
+  /**
+   * Marks item as expired and sends notification by email
+   *
+   * @return item marked as expired
+   */
+  fun expireItem(item: Item): Item {
+    notificationController.sendItemExpirationNotification(item)
+    return itemDAO.updateExpires(item, true, item.lastModifierId)
   }
 
   /**
@@ -143,6 +167,8 @@ class ItemController {
     paymentMethod: String,
     delivery: Boolean,
     deliveryPrice: Double?,
+    expired: Boolean,
+    expiresAt: OffsetDateTime,
     lastModifierId: UUID
   ): Item {
     val result = itemDAO.updateTitle(item, title, lastModifierId)
@@ -156,6 +182,8 @@ class ItemController {
     itemDAO.updatePaymentMethod(result, paymentMethod, lastModifierId)
     itemDAO.updateDelivery(result, delivery, lastModifierId)
     itemDAO.updateDeliveryPrice(result, deliveryPrice, lastModifierId)
+    itemDAO.updateExpires(result, expired, lastModifierId)
+    itemDAO.updateExpiresAt(result, expiresAt, lastModifierId)
     setItemImages(result, images)
     return result
   }

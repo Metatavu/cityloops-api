@@ -1,6 +1,7 @@
 package fi.metatavu.cityloops.persistence.dao
 
 import fi.metatavu.cityloops.persistence.model.*
+import java.time.OffsetDateTime
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.TypedQuery
@@ -66,6 +67,8 @@ class ItemDAO() : AbstractDAO<Item>() {
     item.deliveryPrice = deliveryPrice
     item.creatorId = creatorId
     item.lastModifierId = creatorId
+    item.expired = false
+    item.expiresAt = OffsetDateTime.now().plusDays(30)
     return persist(item)
   }
 
@@ -161,6 +164,34 @@ class ItemDAO() : AbstractDAO<Item>() {
   }
 
   /**
+   * Updates item expired status
+   *
+   * @param item item to update
+   * @param expired is item expired or not
+   * @param lastModifierId last modifier's id
+   * @return updated item
+   */
+  fun updateExpires(item: Item, expired: Boolean, lastModifierId: UUID?): Item {
+    item.expired = expired
+    item.lastModifierId = lastModifierId
+    return persist(item)
+  }
+
+  /**
+   * Updates item expiration date
+   *
+   * @param item item to update
+   * @param expiresAt datetime item expires
+   * @param lastModifierId last modifier's id
+   * @return updated item
+   */
+  fun updateExpiresAt(item: Item, expiresAt: OffsetDateTime, lastModifierId: UUID?): Item {
+    item.expiresAt = expiresAt;
+    item.lastModifierId = lastModifierId
+    return persist(item)
+  }
+
+  /**
    * Updates item payment method
    *
    * @param paymentMethod item payment method
@@ -213,6 +244,25 @@ class ItemDAO() : AbstractDAO<Item>() {
   }
 
   /**
+   * Lists items that have their expiration date due and that are not yet expired
+   *
+   * @return list of items to expire
+   */
+  fun listItemsToExpire(): List<Item> {
+    val entityManager = getEntityManager()
+    val criteriaBuilder = entityManager.criteriaBuilder
+    val criteria = criteriaBuilder.createQuery(Item::class.java)
+    val root = criteria.from(Item::class.java)
+    val restrictions = ArrayList<Predicate>()
+    restrictions.add(criteriaBuilder.equal(root.get(Item_.expired), false))
+    restrictions.add(criteriaBuilder.lessThanOrEqualTo(root.get(Item_.expiresAt), OffsetDateTime.now()))
+    criteria.select(root)
+    criteria.where(*restrictions.toTypedArray())
+    val query: TypedQuery<Item> = entityManager.createQuery<Item>(criteria)
+    return query.resultList
+  }
+
+  /**
    * List items
    *
    * @param firstResult index of the first result
@@ -220,10 +270,11 @@ class ItemDAO() : AbstractDAO<Item>() {
    * @param returnOldestFirst return oldest first
    * @param user filter by user
    * @param category filter by category
+   * @param includeExpired include expired items
    *
    * @return list of items
    */
-  fun list(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?, category: Category?): List<Item> {
+  fun list(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?, category: Category?, includeExpired: Boolean?): List<Item> {
     val entityManager = getEntityManager()
     val criteriaBuilder = entityManager.criteriaBuilder
     val criteria = criteriaBuilder.createQuery(Item::class.java)
@@ -243,6 +294,8 @@ class ItemDAO() : AbstractDAO<Item>() {
     if (category != null) {
       restrictions.add(criteriaBuilder.equal(root.get(Item_.category), category))
     }
+
+    restrictions.add(criteriaBuilder.equal(root.get(Item_.expired), includeExpired ?: false))
 
     criteria.select(root)
     criteria.where(*restrictions.toTypedArray())

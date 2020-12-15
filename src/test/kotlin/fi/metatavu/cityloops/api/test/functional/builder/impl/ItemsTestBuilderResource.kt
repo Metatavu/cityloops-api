@@ -29,10 +29,11 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
    * @param firstResult index of the first result
    * @param maxResults limit amount of results to this number
    * @param returnOldestFirst return oldest first
+   * @param includeExpired include expired items
    * @return list of items
    */
-  fun list(userId: UUID?, categoryId: UUID?, firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?): Array<Item> {
-    return api.listItems(userId, categoryId, firstResult, maxResults, returnOldestFirst)
+  fun list(userId: UUID?, categoryId: UUID?, firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, includeExpired: Boolean?): Array<Item> {
+    return api.listItems(userId, categoryId, firstResult, maxResults, returnOldestFirst, includeExpired)
   }
 
   /**
@@ -54,7 +55,8 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
       priceUnit = "€",
       price = 0.0,
       paymentMethod = "Cash only",
-      delivery = false
+      delivery = false,
+      expired = false
     )
     return create(item)
   }

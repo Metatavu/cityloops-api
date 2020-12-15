@@ -54,6 +54,12 @@ class Item {
   var user: User? = null
 
   @Column(nullable = false)
+  var expired: Boolean? = null
+
+  @Column(nullable = false)
+  var expiresAt: OffsetDateTime? = null
+
+  @Column(nullable = false)
   var createdAt: OffsetDateTime? = null
 
   @Column(nullable = false)
