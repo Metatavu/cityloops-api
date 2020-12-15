@@ -13,17 +13,22 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class NotificationController {
 
-    private lateinit var emailSender: EmailSender
+  private lateinit var emailSender: EmailSender
 
-    fun sendItemExpirationNotification(item: Item) {
-        val user = item.user ?: return
-        val notificationTitle = "Ilmoitus ${item.title} on vanhentunut"
-        val notificationContent = """
-            Ilmoitus ${item.title} on vanhentunut.
-            
-            Mikäli haluat uusia ilmoituksen voit tehdä sen kirjautumalla sisään ja jatkamalla ilmoitusta.
-        """.trimIndent()
-        emailSender.sendMail(user.email, notificationTitle, notificationContent)
-    }
+  /**
+   * Sends item expiration notification
+   *
+   * @param item Item that is expiring
+   */
+  fun sendItemExpirationNotification(item: Item) {
+    val user = item.user ?: return
+    val notificationTitle = "Ilmoitus ${item.title} on vanhentunut"
+    val notificationContent = """
+    Ilmoitus ${item.title} on vanhentunut.
+    
+    Mikäli haluat uusia ilmoituksen voit tehdä sen kirjautumalla sisään ja jatkamalla ilmoitusta.
+    """.trimIndent()
+    emailSender.sendMail(user.email, notificationTitle, notificationContent)
+  }
 
 }

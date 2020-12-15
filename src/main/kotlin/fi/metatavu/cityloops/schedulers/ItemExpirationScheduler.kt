@@ -15,14 +15,12 @@ import javax.inject.Inject
 @Startup
 class ItemExpirationScheduler {
 
-    @Inject
-    private lateinit var itemController: ItemController
+  @Inject
+  private lateinit var itemController: ItemController
 
-    @Schedule(hour = "*", minute="1", info = "Every hour")
-    fun checkExpiration() {
-        val items = itemController.listItemsToExpire()
-        items.forEach { itemController.expireItem(it) }
-    }
-
-
+  @Schedule(hour = "*", minute = "1", info = "Every hour")
+  fun checkExpiration() {
+    val items = itemController.listItemsToExpire()
+    items.forEach { itemController.expireItem(it) }
+  }
 }

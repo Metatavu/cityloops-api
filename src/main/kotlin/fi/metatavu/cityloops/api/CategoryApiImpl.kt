@@ -132,7 +132,8 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
       maxResults = null,
       returnOldestFirst = null,
       user = null,
-      category = category
+      category = category,
+      includeExpired = false
     )
     items.forEach { item ->
       itemController.deleteItem(item)

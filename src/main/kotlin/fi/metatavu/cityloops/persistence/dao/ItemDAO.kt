@@ -270,6 +270,7 @@ class ItemDAO() : AbstractDAO<Item>() {
    * @param returnOldestFirst return oldest first
    * @param user filter by user
    * @param category filter by category
+   * @param includeExpired include expired items
    *
    * @return list of items
    */

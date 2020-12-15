@@ -5,6 +5,7 @@ import fi.metatavu.cityloops.api.spec.model.Item
 import fi.metatavu.cityloops.api.translate.CategoryTranslator
 import fi.metatavu.cityloops.api.translate.ItemTranslator
 import fi.metatavu.cityloops.controllers.*
+import java.time.OffsetDateTime
 
 import java.util.*
 import javax.ejb.Stateful
@@ -115,7 +116,7 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     val expired = item.expired ?: false
     val userId = item.user?.id
     if (expired && (loggerUserId == null || userId == null || !userId.equals(loggerUserId))) {
-      return createNotFound("Item with ID: $itemId could not be found!")
+      return createNotFound("Item with ID: $itemId is expired!")
     }
     return createOk(itemTranslator.translate(item))
   }
@@ -132,7 +133,7 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     val foundItem = itemController.findItemById(itemId) ?: return createNotFound("Item with ID: $itemId could not be found!")
     var expiresAt = foundItem.expiresAt ?: OffsetDateTime.now().plusDays(30)
     val expired = payload.expired
-    if (foundItem.expired == true && expired == false) {
+    if (foundItem.expired == true && !expired) {
       //Item is renewed
       expiresAt = OffsetDateTime.now().plusDays(30)
     }

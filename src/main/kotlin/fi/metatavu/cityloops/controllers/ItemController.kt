@@ -125,9 +125,9 @@ class ItemController {
   }
 
   /**
-   * Lists items to expire
+   * Marks item as expired and sends notification by email
    *
-   * @return list of items to expire
+   * @return item marked as expired
    */
   fun expireItem(item: Item): Item {
     notificationController.sendItemExpirationNotification(item)
