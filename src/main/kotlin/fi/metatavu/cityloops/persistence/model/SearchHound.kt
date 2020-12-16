@@ -45,6 +45,9 @@ class SearchHound {
   var modifiedAt: OffsetDateTime? = null
 
   @Column(nullable = false)
+  var expiresAt: OffsetDateTime? = null
+
+  @Column(nullable = false)
   var creatorId: UUID? = null
 
   @Column(nullable = false)
@@ -57,6 +60,7 @@ class SearchHound {
   fun onCreate() {
     createdAt = OffsetDateTime.now()
     modifiedAt = OffsetDateTime.now()
+    expiresAt = OffsetDateTime.now().plusDays(30)
   }
 
   /**
