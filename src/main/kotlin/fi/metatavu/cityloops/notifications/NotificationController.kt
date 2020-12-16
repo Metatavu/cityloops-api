@@ -4,6 +4,7 @@ import fi.metatavu.cityloops.email.EmailSender
 import fi.metatavu.cityloops.email.mailgun.MailgunEmailSender
 import fi.metatavu.cityloops.persistence.model.Item
 import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 
 /**
  * Controller for sending notifications
@@ -14,6 +15,7 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class NotificationController {
 
+  @Inject
   private lateinit var emailSender: EmailSender
 
   /**
