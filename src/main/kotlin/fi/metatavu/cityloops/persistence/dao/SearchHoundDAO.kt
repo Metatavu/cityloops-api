@@ -160,7 +160,7 @@ class SearchHoundDAO() : AbstractDAO<SearchHound>() {
       restrictions.add(criteriaBuilder.equal(root.get(SearchHound_.notificationsOn), notificationsOn))
     }
 
-    restrictions.add(criteriaBuilder.lessThanOrEqualTo(root.get(SearchHound_.expiresAt), OffsetDateTime.now()))
+    restrictions.add(criteriaBuilder.greaterThanOrEqualTo(root.get(SearchHound_.expiresAt), OffsetDateTime.now()))
 
     criteria.select(root)
     criteria.where(*restrictions.toTypedArray())
