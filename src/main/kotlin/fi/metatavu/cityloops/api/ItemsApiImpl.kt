@@ -81,7 +81,7 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     )
 
     val searchHounds = searchHoundController.listSearchHounds(user = null, category = category, notificationsOn = true)
-    searchHoundController.sendNotifications(searchHounds)
+    searchHoundController.sendNotifications(searchHounds, item)
     return createOk(itemTranslator.translate(item))
   }
 
@@ -171,7 +171,7 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     )
 
     val searchHounds = searchHoundController.listSearchHounds(user = null, category = category, notificationsOn = true)
-    searchHoundController.sendNotifications(searchHounds)
+    searchHoundController.sendNotifications(searchHounds, item)
 
     return createOk(itemTranslator.translate(item))
   }
