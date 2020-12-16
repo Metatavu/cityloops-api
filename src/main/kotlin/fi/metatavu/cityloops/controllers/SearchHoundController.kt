@@ -2,8 +2,10 @@ package fi.metatavu.cityloops.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fi.metatavu.cityloops.api.spec.model.Metadata
+import fi.metatavu.cityloops.notifications.NotificationController
 import fi.metatavu.cityloops.persistence.dao.SearchHoundDAO
 import fi.metatavu.cityloops.persistence.model.Category
+import fi.metatavu.cityloops.persistence.model.Item
 import fi.metatavu.cityloops.persistence.model.SearchHound
 import fi.metatavu.cityloops.persistence.model.User
 import java.time.OffsetDateTime
@@ -21,6 +23,9 @@ class SearchHoundController {
 
   @Inject
   private lateinit var searchHoundDAO: SearchHoundDAO
+
+  @Inject
+  private lateinit var notificationController: NotificationController
 
   /**
    * Creates new searchHound
@@ -125,13 +130,16 @@ class SearchHoundController {
    * Sends notification email to users that have search hounds enabled
    *
    * @param searchHounds list of search hounds
+   * @param item item
    */
-  fun sendNotifications(searchHounds: List<SearchHound>) {
+  fun sendNotifications(searchHounds: List<SearchHound>, item: Item) {
     searchHounds.forEach { hound ->
       val user = hound.user
       if (user != null) {
         val email = user.email
-        // TODO: Add email notification logic
+        if (email != null) {
+          notificationController.sendSearchHoundItemFoundNotification(email, item)
+        }
       }
     }
   }

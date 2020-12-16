@@ -206,4 +206,14 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="searchhoundsaddexpiresat" author="Heikki Kurhinen">
+        <addColumn tableName="searchHound">
+            <column name="expiresat" type="datetime(6)" >
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <sql>UPDATE searchHound set expiresat = now()</sql>
+    </changeSet>
+
+
 </databaseChangeLog>
