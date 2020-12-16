@@ -130,6 +130,7 @@ class SearchHoundController {
    * Sends notification email to users that have search hounds enabled
    *
    * @param searchHounds list of search hounds
+   * @param item item
    */
   fun sendNotifications(searchHounds: List<SearchHound>, item: Item) {
     searchHounds.forEach { hound ->
