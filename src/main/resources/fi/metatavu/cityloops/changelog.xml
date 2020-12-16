@@ -165,4 +165,45 @@
         <sql>UPDATE item set expired = false</sql>
     </changeSet>
 
+    <changeSet id="searchhounds" author="jari.nykanen">
+        <createTable tableName="searchHound">
+            <column name="id" type="binary(16)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notificationsOn" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="binary(16)">
+                <constraints nullable="false" foreignKeyName="FK_SEARCH_HOUND_CATEGORY_CATEGORY_ID" referencedColumnNames="id" referencedTableName="category"/>
+            </column>
+            <column name="user_id" type="binary(16)">
+                <constraints nullable="false" foreignKeyName="FK_SEARCH_HOUND_USER_ID_USER_ID" referencedColumnNames="id" referencedTableName="user"/>
+            </column>
+            <column name="expires" type="datetime(6)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="minPrice" type="double">
+                <constraints nullable="true"/>
+            </column>
+            <column name="maxPrice" type="double">
+                <constraints nullable="true"/>
+            </column>
+            <column name="createdat" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modifiedat" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creatorid" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastmodifierid" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>
