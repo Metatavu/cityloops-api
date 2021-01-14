@@ -55,6 +55,9 @@ class UserDAO() : AbstractDAO<User>() {
     user.phoneNumber = phoneNumber
     user.companyAccount = companyAccount
     user.verified = verified
+    user.companyId = companyId
+    user.officeInfo = officeInfo
+    user.coordinates = coordinates
     user.creatorId = creatorId
     user.lastModifierId = creatorId
     return persist(user)
