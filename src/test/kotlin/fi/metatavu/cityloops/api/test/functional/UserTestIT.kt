@@ -41,6 +41,8 @@ class UserTestIT: AbstractFunctionalTest() {
       assertEquals(userToCreate.phoneNumber, createdUser.phoneNumber)
       assertEquals(userToCreate.companyAccount, createdUser.companyAccount)
       assertEquals(userToCreate.verified, createdUser.verified)
+      assertEquals(userToCreate.companyId, createdUser.companyId)
+      assertEquals(userToCreate.officeInfo, createdUser.officeInfo)
     }
   }
 
