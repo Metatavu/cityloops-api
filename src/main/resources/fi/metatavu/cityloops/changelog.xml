@@ -1,0 +1,219 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="category" author="jari.nykanen">
+        <createTable tableName="category">
+            <column name="id" type="binary(16)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdat" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modifiedat" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creatorid" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastmodifierid" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="parentcategory" author="jari.nykanen">
+        <addColumn tableName="category">
+            <column name="parentCategoryId" type="binary(16)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="items" author="jari.nykanen">
+        <createTable tableName="item">
+            <column name="id" type="binary(16)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="title" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="binary(16)">
+                <constraints nullable="false" foreignKeyName="FK_ITEM_CATEGORY_CATEGORY_ID" referencedColumnNames="id" referencedTableName="category"/>
+            </column>
+            <column name="onlyForCompanies" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="metadata" type="longtext">
+                <constraints nullable="false"/>
+            </column>
+            <column name="thumbnailUrl" type="varchar(191)"/>
+            <column name="properties" type="longtext"/>
+            <column name="createdat" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modifiedat" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creatorid" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastmodifierid" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="itemimage">
+            <column name="id" type="binary(16)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="item_id" type="binary(16)">
+                <constraints nullable="false" foreignKeyName="FK_ITEM_IMAGE_ID_ITEM_ID" referencedColumnNames="id" referencedTableName="item"/>
+            </column>
+            <column name="url" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="users" author="jari.nykanen">
+        <createTable tableName="user">
+            <column name="id" type="binary(16)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phoneNumber" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="companyAccount" type="boolean" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="verified" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdat" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modifiedat" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creatorid" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastmodifierid" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addColumn tableName="item">
+            <column name="user_id" type="binary(16)">
+                <constraints nullable="false" foreignKeyName="FK_ITEM_USER_ID_USER_ID" referencedColumnNames="id" referencedTableName="user"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="cateogryproperties" author="jari.nykanen">
+        <addColumn tableName="category">
+            <column name="properties" type="longtext"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="itemprice" author="jari.nykanen">
+        <addColumn tableName="item">
+            <column name="price" type="double"/>
+            <column name="priceUnit" type="varchar(191)"/>
+        </addColumn>
+
+        <sql>UPDATE item set price = 0.0</sql>
+        <sql>UPDATE item set priceUnit = '€'</sql>
+    </changeSet>
+
+    <changeSet id="missinguserfields" author="jari.nykanen">
+        <addColumn tableName="user">
+            <column name="companyId" type="varchar(191)"/>
+            <column name="officeInfo" type="varchar(191)"/>
+            <column name="coordinates" type="longtext"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="itempaymentanddeliveryoptions" author="jari.nykanen">
+        <addColumn tableName="item">
+            <column name="paymentMethod" type="varchar(191)"/>
+            <column name="delivery" type="boolean"/>
+            <column name="deliveryPrice" type="double"/>
+        </addColumn>
+
+        <sql>UPDATE item set paymentMethod = 'Käteinen'</sql>
+        <sql>UPDATE item set delivery = false</sql>
+    </changeSet>
+
+    <changeSet id="itemaddexpiredcolumns" author="Heikki Kurhinen">
+        <addColumn tableName="item">
+            <column name="expiresat" type="datetime(6)" />
+            <column name="expired" type="boolean"/>
+        </addColumn>
+        <sql>UPDATE item set expired = false</sql>
+    </changeSet>
+
+    <changeSet id="searchhounds" author="jari.nykanen">
+        <createTable tableName="searchHound">
+            <column name="id" type="binary(16)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notificationsOn" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="binary(16)">
+                <constraints nullable="false" foreignKeyName="FK_SEARCH_HOUND_CATEGORY_CATEGORY_ID" referencedColumnNames="id" referencedTableName="category"/>
+            </column>
+            <column name="user_id" type="binary(16)">
+                <constraints nullable="false" foreignKeyName="FK_SEARCH_HOUND_USER_ID_USER_ID" referencedColumnNames="id" referencedTableName="user"/>
+            </column>
+            <column name="expires" type="datetime(6)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="minPrice" type="double">
+                <constraints nullable="true"/>
+            </column>
+            <column name="maxPrice" type="double">
+                <constraints nullable="true"/>
+            </column>
+            <column name="createdat" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modifiedat" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creatorid" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastmodifierid" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="searchhoundsaddexpiresat" author="Heikki Kurhinen">
+        <addColumn tableName="searchHound">
+            <column name="expiresat" type="datetime(6)" >
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <sql>UPDATE searchHound set expiresat = now()</sql>
+    </changeSet>
+
+
+</databaseChangeLog>
