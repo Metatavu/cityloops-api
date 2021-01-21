@@ -56,6 +56,8 @@ class UsersApiImpl: UsersApi, AbstractApi() {
     val companyId = payload.companyId
     val officeInfo = payload.officeInfo
     val coordinates = payload.coordinates
+    val description = payload.description
+    val logoUrl = payload.logoUrl
 
     val createdUser = userController.createUser(
       id = keycloakId,
@@ -67,7 +69,9 @@ class UsersApiImpl: UsersApi, AbstractApi() {
       verified = verified,
       companyId = companyId,
       officeInfo = officeInfo,
-      coordinates = coordinates
+      coordinates = coordinates,
+      description = description,
+      logoUrl = logoUrl
     )
 
     return createOk(userTranslator.translate(createdUser))
@@ -112,6 +116,8 @@ class UsersApiImpl: UsersApi, AbstractApi() {
     val companyId = payload.companyId
     val officeInfo = payload.officeInfo
     val coordinates = payload.coordinates
+    val description = payload.description
+    val logoUrl = payload.logoUrl
 
     val updatedUser = userController.updateUser(
       user = foundUser,
@@ -124,7 +130,9 @@ class UsersApiImpl: UsersApi, AbstractApi() {
       modifierId = keycloakUserId,
       companyId = companyId,
       officeInfo = officeInfo,
-      coordinates = coordinates
+      coordinates = coordinates,
+      description = description,
+      logoUrl = logoUrl
     )
 
     return createOk(userTranslator.translate(updatedUser))

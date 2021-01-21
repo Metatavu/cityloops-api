@@ -31,6 +31,8 @@ class UserDAO() : AbstractDAO<User>() {
    * @param companyId company id
    * @param officeInfo office info
    * @param coordinates office coordinates
+   * @param description user description
+   * @param logoUrl user logo url
    * @param creatorId creator's id
    * @return created user
    */
@@ -45,6 +47,8 @@ class UserDAO() : AbstractDAO<User>() {
     companyId: String?,
     officeInfo: String?,
     coordinates: String?,
+    description: String?,
+    logoUrl: String?,
     creatorId: UUID
   ): User {
     val user = User()
@@ -58,6 +62,8 @@ class UserDAO() : AbstractDAO<User>() {
     user.companyId = companyId
     user.officeInfo = officeInfo
     user.coordinates = coordinates
+    user.description = description
+    user.logoUrl = logoUrl
     user.creatorId = creatorId
     user.lastModifierId = creatorId
     return persist(user)
@@ -216,6 +222,34 @@ class UserDAO() : AbstractDAO<User>() {
   fun updateCoordinates(user: User, coordinates: String?, lastModifierId: UUID): User {
     user.lastModifierId = lastModifierId
     user.coordinates = coordinates
+    return persist(user)
+  }
+
+  /**
+   * Updates user description
+   *
+   * @param user user object
+   * @param description new user description
+   * @param lastModifierId last modifier's id
+   * @return updated user
+   */
+  fun updateDescription(user: User, description: String?, lastModifierId: UUID): User {
+    user.lastModifierId = lastModifierId
+    user.description = description
+    return persist(user)
+  }
+
+  /**
+   * Updates user logo url
+   *
+   * @param user user object
+   * @param logoUrl new user logo url
+   * @param lastModifierId last modifier's id
+   * @return updated user
+   */
+  fun updateLogoUrl(user: User, logoUrl: String?, lastModifierId: UUID): User {
+    user.lastModifierId = lastModifierId
+    user.logoUrl = logoUrl
     return persist(user)
   }
 }
