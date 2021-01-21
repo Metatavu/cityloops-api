@@ -3,6 +3,7 @@ package fi.metatavu.cityloops.api.test.functional.builder.impl
 import fi.metatavu.cityloops.api.client.infrastructure.ApiClient
 import fi.metatavu.cityloops.api.client.apis.UsersApi
 import fi.metatavu.cityloops.api.client.infrastructure.ClientException
+import fi.metatavu.cityloops.api.client.models.PublicUser
 import fi.metatavu.cityloops.api.client.models.User
 import fi.metatavu.cityloops.api.test.functional.settings.TestSettings
 import fi.metatavu.cityloops.api.test.functional.impl.ApiTestBuilderResource
@@ -70,12 +71,22 @@ class UsersTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
   }
 
   /**
+   * Find public user information with user id
+   *
+   * @param userId id of the user
+   * @return found public user
+   */
+  fun findPublicUser(userId: UUID): PublicUser {
+    return api.findPublicUser(userId)
+  }
+
+  /**
    * Update user
    *
    * @param payload user to update
    * @return updated user
    */
-  fun updateUser(userId: UUID, payload: User): User? {
+  fun updateUser(userId: UUID, payload: User): User {
     return api.updateUser(userId, payload)
   }
 

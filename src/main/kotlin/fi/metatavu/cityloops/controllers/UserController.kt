@@ -32,6 +32,8 @@ class UserController {
    * @param companyId company id
    * @param officeInfo office info
    * @param coordinates office coordinates
+   * @param description user description
+   * @param logoUrl user logo url
    * @return created user
    */
   fun createUser(
@@ -44,7 +46,9 @@ class UserController {
     verified: Boolean,
     companyId: String?,
     officeInfo: String?,
-    coordinates: Coordinates?
+    coordinates: Coordinates?,
+    description: String?,
+    logoUrl: String?
   ): User {
     val keycloakId = UUID.fromString(id)
     return userDAO.create(
@@ -58,6 +62,8 @@ class UserController {
       companyId = companyId,
       officeInfo = officeInfo,
       coordinates = getDataAsString(coordinates),
+      description = description,
+      logoUrl = logoUrl,
       creatorId = keycloakId
     )
   }
@@ -96,6 +102,8 @@ class UserController {
    * @param companyId company id
    * @param officeInfo office info
    * @param coordinates office coordinates
+   * @param description user description
+   * @param logoUrl user logo url
    * @param modifierId modifying user id
    * @return updated user
    */
@@ -110,6 +118,8 @@ class UserController {
     companyId: String?,
     officeInfo: String?,
     coordinates: Coordinates?,
+    description: String?,
+    logoUrl: String?,
     modifierId: UUID
   ): User {
     val result = userDAO.updateName(user, name, modifierId)
@@ -121,6 +131,8 @@ class UserController {
     userDAO.updateCompanyId(result, companyId, modifierId)
     userDAO.updateOfficeInfo(result, officeInfo, modifierId)
     userDAO.updateCoordinates(result, getDataAsString(coordinates), modifierId)
+    userDAO.updateDescription(result, description, modifierId)
+    userDAO.updateLogoUrl(result, logoUrl, modifierId)
     return result
   }
 

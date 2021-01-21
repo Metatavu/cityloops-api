@@ -47,6 +47,12 @@ class User {
   @Column(nullable = true)
   var coordinates: String? = null
 
+  @Column(nullable = true)
+  var description: String? = null
+
+  @Column(nullable = true)
+  var logoUrl: String? = null
+
   @Column(nullable = false)
   var createdAt: OffsetDateTime? = null
 
