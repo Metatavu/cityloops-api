@@ -20,16 +20,6 @@ class UsersTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
   }
 
   /**
-   * List users
-   *
-   * @param companyAccount list only company accounts
-   * @param verified list only verified accounts
-   * @return list of users
-   */
-  fun list(companyAccount: Boolean?, verified: Boolean?): Array<User> {
-    return api.listUsers(companyAccount, verified)
-  }
-  /**
    * Creates new user with default values
    *
    * @param email user email
