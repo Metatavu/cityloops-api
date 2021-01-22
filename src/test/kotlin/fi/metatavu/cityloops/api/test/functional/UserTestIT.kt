@@ -90,63 +90,6 @@ class UserTestIT: AbstractFunctionalTest() {
   }
 
   @Test
-  fun testListUsers() {
-    TestBuilder().use {
-      val emptyList = it.admin().users().list(null, null)
-      assertEquals(0, emptyList.size)
-
-      it.admin().users().create("email1@example.com")
-      it.admin().users().create("email2@example.com")
-
-      val listWithTwoUsers = it.admin().users().list(null, null)
-      assertEquals(2, listWithTwoUsers.size)
-
-      val userToCreate = User(
-        name = "Custom name",
-        address = "Custom address",
-        email = "custom@email.com",
-        phoneNumber = "9876543210",
-        companyAccount = true,
-        verified = true,
-        password = "custom_password"
-      )
-
-      val createdUser = it.admin().users().create(userToCreate)
-
-      val listWithThreeUsers = it.admin().users().list(null, null)
-      assertEquals(3, listWithThreeUsers.size)
-
-      val firstFoundUser = listWithThreeUsers[0]
-      val secondFoundUser = listWithThreeUsers[1]
-      val thirdFoundUser = listWithThreeUsers[2]
-
-      val idList = listWithThreeUsers
-        .map { it.id }
-
-      assertEquals(false, idList.contains(UUID.randomUUID()))
-      assertEquals(true, idList.contains(firstFoundUser.id))
-      assertEquals(true, idList.contains(secondFoundUser.id))
-      assertEquals(true, idList.contains(thirdFoundUser.id))
-
-      val listByCompanyUsers = it.admin().users().list(true, null)
-      assertEquals(1, listByCompanyUsers.size)
-      assertEquals(createdUser.id, listByCompanyUsers[0].id)
-
-      val listByVerifiedUsers = it.admin().users().list(null, true)
-      assertEquals(1, listByVerifiedUsers.size)
-      assertEquals(createdUser.id, listByVerifiedUsers[0].id)
-
-      val listByCompanyUserAndVerifiedUsers = it.admin().users().list(true, true)
-      assertEquals(1, listByCompanyUserAndVerifiedUsers.size)
-      assertEquals(createdUser.id, listByCompanyUserAndVerifiedUsers[0].id)
-
-      val listByVerifiedPrivateUsers = it.admin().users().list(false, true)
-      assertEquals(0, listByVerifiedPrivateUsers.size)
-
-    }
-  }
-
-  @Test
   fun testUpdateUser() {
     TestBuilder().use {
       val defaultUser = it.admin().users().create("email@example.com")
@@ -183,27 +126,6 @@ class UserTestIT: AbstractFunctionalTest() {
       assertEquals(userToUpdate.coordinates, updatedUser.coordinates)
       assertEquals(userToUpdate.description, updatedUser.description)
       assertEquals(userToUpdate.logoUrl, updatedUser.logoUrl)
-    }
-  }
-
-  @Test
-  fun testDeleteUser() {
-    TestBuilder().use {
-      val emptyList = it.admin().users().list(null, null)
-      assertEquals(0, emptyList.size)
-
-      val firstUser = it.admin().users().create("email1@example.com")
-      val secondUser = it.admin().users().create("email2@example.com")
-      val listWithTwoUsers = it.admin().users().list(null, null)
-      assertEquals(2, listWithTwoUsers.size)
-
-      it.admin().users().delete(userId = firstUser.id!!)
-      val listWithOneUsers = it.admin().users().list(null, null)
-      assertEquals(1, listWithOneUsers.size)
-
-      it.admin().users().delete(userId = secondUser.id!!)
-      val listWithoutUsers = it.admin().users().list(null, null)
-      assertEquals(0, listWithoutUsers.size)
     }
   }
 
