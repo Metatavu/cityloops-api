@@ -89,11 +89,11 @@ class UsersApiImpl: UsersApi, AbstractApi() {
 
   override fun updateUser(userId: UUID?, payload: User?): Response {
     val keycloakUserId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
-    if (!isUser) {
+    userId ?: return createBadRequest("Missing user id")
+    if (!isUser || userId != keycloakUserId) {
       return createUnauthorized(FORBIDDEN)
     }
 
-    userId ?: return createBadRequest("Missing user id")
     payload ?: return createBadRequest("Missing user payload")
 
     val foundUser = userController.findUserById(id = userId) ?: return createNotFound("Could not find user with id: $userId")
@@ -130,7 +130,7 @@ class UsersApiImpl: UsersApi, AbstractApi() {
   }
 
   override fun deleteUser(userId: UUID?): Response {
-    if (!isUser) {
+    if (!isUser || userId != loggerUserId) {
       return createUnauthorized(FORBIDDEN)
     }
     userId ?: return createBadRequest("Missing user ID")
