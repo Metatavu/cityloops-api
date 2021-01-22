@@ -77,17 +77,8 @@ class UsersApiImpl: UsersApi, AbstractApi() {
     return createOk(userTranslator.translate(createdUser))
   }
 
-  override fun listUsers(companyAccount: Boolean?, verified: Boolean?): Response? {
-    if (!isUser) {
-      return createUnauthorized(FORBIDDEN)
-    }
-
-    val users = userController.listUsers(companyAccount, verified)
-    return createOk(users.map(userTranslator::translate))
-  }
-
   override fun findUser(userId: UUID?): Response {
-    if (!isUser) {
+    if (!isUser || userId != loggerUserId) {
       return createUnauthorized(FORBIDDEN)
     }
     userId ?: return createBadRequest("Missing user ID")
