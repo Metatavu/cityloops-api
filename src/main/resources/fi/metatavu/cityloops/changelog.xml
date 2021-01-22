@@ -215,5 +215,11 @@
         <sql>UPDATE searchHound set expiresat = now()</sql>
     </changeSet>
 
+    <changeSet id="userdescriptionandlogo" author="Jari Nykänen">
+        <addColumn tableName="user">
+            <column name="description" type="longtext"/>
+            <column name="logoUrl" type="varchar(191)"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

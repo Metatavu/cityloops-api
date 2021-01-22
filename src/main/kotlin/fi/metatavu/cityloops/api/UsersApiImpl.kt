@@ -56,6 +56,8 @@ class UsersApiImpl: UsersApi, AbstractApi() {
     val companyId = payload.companyId
     val officeInfo = payload.officeInfo
     val coordinates = payload.coordinates
+    val description = payload.description
+    val logoUrl = payload.logoUrl
 
     val createdUser = userController.createUser(
       id = keycloakId,
@@ -67,23 +69,16 @@ class UsersApiImpl: UsersApi, AbstractApi() {
       verified = verified,
       companyId = companyId,
       officeInfo = officeInfo,
-      coordinates = coordinates
+      coordinates = coordinates,
+      description = description,
+      logoUrl = logoUrl
     )
 
     return createOk(userTranslator.translate(createdUser))
   }
 
-  override fun listUsers(companyAccount: Boolean?, verified: Boolean?): Response? {
-    if (!isUser) {
-      return createUnauthorized(FORBIDDEN)
-    }
-
-    val users = userController.listUsers(companyAccount, verified)
-    return createOk(users.map(userTranslator::translate))
-  }
-
   override fun findUser(userId: UUID?): Response {
-    if (!isUser) {
+    if (!isAdmin && (!isUser || userId != loggerUserId)) {
       return createUnauthorized(FORBIDDEN)
     }
     userId ?: return createBadRequest("Missing user ID")
@@ -94,11 +89,11 @@ class UsersApiImpl: UsersApi, AbstractApi() {
 
   override fun updateUser(userId: UUID?, payload: User?): Response {
     val keycloakUserId = loggerUserId ?: return createUnauthorized(UNAUTHORIZED)
-    if (!isUser) {
+    userId ?: return createBadRequest("Missing user id")
+    if (!isAdmin && (!isUser || userId != keycloakUserId)) {
       return createUnauthorized(FORBIDDEN)
     }
 
-    userId ?: return createBadRequest("Missing user id")
     payload ?: return createBadRequest("Missing user payload")
 
     val foundUser = userController.findUserById(id = userId) ?: return createNotFound("Could not find user with id: $userId")
@@ -112,6 +107,8 @@ class UsersApiImpl: UsersApi, AbstractApi() {
     val companyId = payload.companyId
     val officeInfo = payload.officeInfo
     val coordinates = payload.coordinates
+    val description = payload.description
+    val logoUrl = payload.logoUrl
 
     val updatedUser = userController.updateUser(
       user = foundUser,
@@ -124,14 +121,16 @@ class UsersApiImpl: UsersApi, AbstractApi() {
       modifierId = keycloakUserId,
       companyId = companyId,
       officeInfo = officeInfo,
-      coordinates = coordinates
+      coordinates = coordinates,
+      description = description,
+      logoUrl = logoUrl
     )
 
     return createOk(userTranslator.translate(updatedUser))
   }
 
   override fun deleteUser(userId: UUID?): Response {
-    if (!isUser) {
+    if (!isAdmin && (!isUser || userId != loggerUserId)) {
       return createUnauthorized(FORBIDDEN)
     }
     userId ?: return createBadRequest("Missing user ID")
