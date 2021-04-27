@@ -4,6 +4,7 @@ import fi.metatavu.cityloops.api.client.infrastructure.ApiClient
 import fi.metatavu.cityloops.api.client.apis.ItemsApi
 import fi.metatavu.cityloops.api.client.infrastructure.ClientException
 import fi.metatavu.cityloops.api.client.models.Item
+import fi.metatavu.cityloops.api.client.models.ItemType
 import fi.metatavu.cityloops.api.client.models.LocationInfo
 import fi.metatavu.cityloops.api.client.models.Metadata
 import fi.metatavu.cityloops.api.spec.model.Category
@@ -32,8 +33,22 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
    * @param includeExpired include expired items
    * @return list of items
    */
-  fun list(userId: UUID?, categoryId: UUID?, firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, includeExpired: Boolean?): Array<Item> {
-    return api.listItems(userId, categoryId, firstResult, maxResults, returnOldestFirst, includeExpired)
+  fun list(
+    userId: UUID?,
+    categoryId: UUID?,
+    firstResult: Int?,
+    maxResults: Int?,
+    returnOldestFirst: Boolean?,
+    includeExpired: Boolean?
+  ): Array<Item> {
+    return api.listItems(
+      userId = userId,
+      categoryId = categoryId,
+      firstResult = firstResult,
+      maxResults = maxResults,
+      sortByDateOldestFirst = returnOldestFirst,
+      includeExpired = includeExpired
+    )
   }
 
   /**
@@ -56,7 +71,8 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
       price = 0.0,
       paymentMethod = "Cash only",
       delivery = false,
-      expired = false
+      expired = false,
+      itemType = ItemType.bUY
     )
     return create(item)
   }
@@ -89,7 +105,7 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
    * @param payload item to update
    * @return updated item
    */
-  fun updateItem(itemId: UUID, payload: Item): Item? {
+  fun updateItem(itemId: UUID, payload: Item): Item {
     return api.updateItem(itemId, payload)
   }
 
@@ -106,7 +122,7 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
       }
 
       val closeableItem: Item = closable
-      closeableItem.id!!.equals(itemId)
+      closeableItem.id!! == itemId
     }
   }
 

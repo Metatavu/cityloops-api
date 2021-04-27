@@ -1,6 +1,7 @@
 package fi.metatavu.cityloops.api.test.functional
 
 import fi.metatavu.cityloops.api.client.models.Item
+import fi.metatavu.cityloops.api.client.models.ItemType
 import fi.metatavu.cityloops.api.client.models.LocationInfo
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -46,7 +47,8 @@ class ItemTestIT: AbstractFunctionalTest() {
         paymentMethod = "Cash only",
         delivery = true,
         deliveryPrice = 20.0,
-        expired = false
+        expired = false,
+        itemType = ItemType.bUY
       )
 
       val customItem = it.admin().items().create(customItemToCreate)
@@ -142,7 +144,8 @@ class ItemTestIT: AbstractFunctionalTest() {
         paymentMethod = "Cash & Credit card",
         delivery = true,
         deliveryPrice = 20.0,
-        expired = false
+        expired = false,
+        itemType = ItemType.rENT
       )
 
       val updatedItem = it.admin().items().updateItem(
@@ -150,19 +153,20 @@ class ItemTestIT: AbstractFunctionalTest() {
         payload = itemToUpdate
       )
 
-      assertEquals(itemToUpdate.title, updatedItem?.title)
-      assertEquals(itemToUpdate.category, updatedItem?.category)
-      assertEquals(itemToUpdate.onlyForCompanies, updatedItem?.onlyForCompanies)
-      assertEquals(itemToUpdate.metadata.amount, updatedItem?.metadata?.amount)
-      assertEquals(itemToUpdate.metadata.locationInfo.email, updatedItem?.metadata?.locationInfo?.email)
-      assertEquals(itemToUpdate.metadata.locationInfo.address, updatedItem?.metadata?.locationInfo?.address)
-      assertEquals(itemToUpdate.metadata.locationInfo.description, updatedItem?.metadata?.locationInfo?.description)
-      assertEquals(itemToUpdate.metadata.locationInfo.phone, updatedItem?.metadata?.locationInfo?.phone)
-      assertEquals(itemToUpdate.price, updatedItem?.price)
-      assertEquals(itemToUpdate.priceUnit, updatedItem?.priceUnit)
-      assertEquals(itemToUpdate.paymentMethod, updatedItem?.paymentMethod)
-      assertEquals(itemToUpdate.delivery, updatedItem?.delivery)
-      assertEquals(itemToUpdate.deliveryPrice, updatedItem?.deliveryPrice)
+      assertEquals(itemToUpdate.title, updatedItem.title)
+      assertEquals(itemToUpdate.category, updatedItem.category)
+      assertEquals(itemToUpdate.onlyForCompanies, updatedItem.onlyForCompanies)
+      assertEquals(itemToUpdate.metadata.amount, updatedItem.metadata.amount)
+      assertEquals(itemToUpdate.metadata.locationInfo.email, updatedItem.metadata.locationInfo.email)
+      assertEquals(itemToUpdate.metadata.locationInfo.address, updatedItem.metadata.locationInfo.address)
+      assertEquals(itemToUpdate.metadata.locationInfo.description, updatedItem.metadata.locationInfo.description)
+      assertEquals(itemToUpdate.metadata.locationInfo.phone, updatedItem.metadata.locationInfo.phone)
+      assertEquals(itemToUpdate.price, updatedItem.price)
+      assertEquals(itemToUpdate.priceUnit, updatedItem.priceUnit)
+      assertEquals(itemToUpdate.paymentMethod, updatedItem.paymentMethod)
+      assertEquals(itemToUpdate.delivery, updatedItem.delivery)
+      assertEquals(itemToUpdate.deliveryPrice, updatedItem.deliveryPrice)
+      assertEquals(itemToUpdate.itemType, updatedItem.itemType)
     }
   }
 
@@ -215,7 +219,8 @@ class ItemTestIT: AbstractFunctionalTest() {
         priceUnit = "€/kpl",
         paymentMethod = "Cash only",
         delivery = false,
-        expired = false
+        expired = false,
+        itemType = ItemType.bUY
       )
 
       val createdItem = it.admin().items().create(customItemToCreate)
@@ -240,15 +245,16 @@ class ItemTestIT: AbstractFunctionalTest() {
         priceUnit = "€/kpl",
         paymentMethod = "Cash only",
         delivery = false,
-        expired = false
+        expired = false,
+        itemType = ItemType.bUY
       )
 
       val updatedItem = it.admin().items().updateItem(itemId = createdItem.id!!, payload = customItemToUpdate)
       assertNotNull(updatedItem)
 
-      assertEquals(customItemToUpdate.images?.size, updatedItem?.images?.size)
-      assertEquals(false, updatedItem?.images?.contains("http://example.com/image1.png"))
-      assertEquals(true, updatedItem?.images?.contains("http://example.com/image3.png"))
+      assertEquals(customItemToUpdate.images?.size, updatedItem.images?.size)
+      assertEquals(false, updatedItem.images?.contains("http://example.com/image1.png"))
+      assertEquals(true, updatedItem.images?.contains("http://example.com/image3.png"))
     }
   }
 

@@ -222,4 +222,12 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="itemtype" author="jari.nykanen">
+        <addColumn tableName="item">
+            <column name="itemType" type="varchar(191)"/>
+        </addColumn>
+
+        <sql>UPDATE item set itemType = "SELL"</sql>
+    </changeSet>
+
 </databaseChangeLog>
