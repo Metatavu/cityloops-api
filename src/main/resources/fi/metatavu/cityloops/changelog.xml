@@ -224,7 +224,9 @@
 
     <changeSet id="itemtype" author="jari.nykanen">
         <addColumn tableName="item">
-            <column name="itemType" type="varchar(191)"/>
+            <column name="itemType" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
 
         <sql>UPDATE item set itemType = 'SELL'</sql>
