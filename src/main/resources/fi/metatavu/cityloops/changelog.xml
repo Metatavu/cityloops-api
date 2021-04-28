@@ -227,7 +227,7 @@
             <column name="itemType" type="varchar(191)"/>
         </addColumn>
 
-        <sql>UPDATE item set itemType = "SELL"</sql>
+        <sql>UPDATE item set itemType = 'SELL'</sql>
     </changeSet>
 
 </databaseChangeLog>
