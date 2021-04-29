@@ -296,20 +296,21 @@ class ItemDAO() : AbstractDAO<Item>() {
    *
    * @param firstResult index of the first result
    * @param maxResults limit amount of results to this number
-   * @param returnOldestFirst return oldest first
+   * @param sortByDateReturnOldestFirst return oldest first
    * @param user filter by user
    * @param category filter by category
    * @param includeExpired include expired items
-   *
+   * @param itemType filter by item type
    * @return list of items
    */
   fun list(
     firstResult: Int?,
     maxResults: Int?,
-    returnOldestFirst: Boolean?,
+    sortByDateReturnOldestFirst: Boolean?,
     user: User?,
     category: Category?,
-    includeExpired: Boolean?
+    includeExpired: Boolean?,
+    itemType: ItemType?
   ): List<Item> {
     val entityManager = getEntityManager()
     val criteriaBuilder = entityManager.criteriaBuilder
@@ -317,7 +318,7 @@ class ItemDAO() : AbstractDAO<Item>() {
     val root = criteria.from(Item::class.java)
     val restrictions = ArrayList<Predicate>()
 
-    if (returnOldestFirst == true) {
+    if (sortByDateReturnOldestFirst == true) {
       criteria.orderBy(criteriaBuilder.asc(root.get(Item_.createdAt)))
     } else {
       criteria.orderBy(criteriaBuilder.desc(root.get(Item_.createdAt)))
@@ -329,6 +330,10 @@ class ItemDAO() : AbstractDAO<Item>() {
 
     if (category != null) {
       restrictions.add(criteriaBuilder.equal(root.get(Item_.category), category))
+    }
+
+    if (itemType != null) {
+      restrictions.add(criteriaBuilder.equal(root.get(Item_.itemType), itemType))
     }
 
     restrictions.add(criteriaBuilder.equal(root.get(Item_.expired), includeExpired ?: false))

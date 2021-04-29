@@ -7,7 +7,6 @@ import fi.metatavu.cityloops.api.client.models.Item
 import fi.metatavu.cityloops.api.client.models.ItemType
 import fi.metatavu.cityloops.api.client.models.LocationInfo
 import fi.metatavu.cityloops.api.client.models.Metadata
-import fi.metatavu.cityloops.api.spec.model.Category
 import fi.metatavu.cityloops.api.test.functional.settings.TestSettings
 import fi.metatavu.cityloops.api.test.functional.impl.ApiTestBuilderResource
 import fi.metatavu.jaxrs.test.functional.builder.AbstractTestBuilder
@@ -31,6 +30,7 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
    * @param maxResults limit amount of results to this number
    * @param returnOldestFirst return oldest first
    * @param includeExpired include expired items
+   * @param itemType filter by item type
    * @return list of items
    */
   fun list(
@@ -39,7 +39,8 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
     firstResult: Int?,
     maxResults: Int?,
     returnOldestFirst: Boolean?,
-    includeExpired: Boolean?
+    includeExpired: Boolean?,
+    itemType: ItemType?
   ): Array<Item> {
     return api.listItems(
       userId = userId,
@@ -47,7 +48,8 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
       firstResult = firstResult,
       maxResults = maxResults,
       sortByDateOldestFirst = returnOldestFirst,
-      includeExpired = includeExpired
+      includeExpired = includeExpired,
+      itemType = itemType
     )
   }
 

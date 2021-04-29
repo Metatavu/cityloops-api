@@ -2,6 +2,7 @@ package fi.metatavu.cityloops.api
 
 import fi.metatavu.cityloops.api.spec.ItemsApi
 import fi.metatavu.cityloops.api.spec.model.Item
+import fi.metatavu.cityloops.api.spec.model.ItemType
 import fi.metatavu.cityloops.api.translate.CategoryTranslator
 import fi.metatavu.cityloops.api.translate.ItemTranslator
 import fi.metatavu.cityloops.controllers.*
@@ -87,7 +88,15 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     return createOk(itemTranslator.translate(item))
   }
 
-  override fun listItems(userId: UUID?, categoryId: UUID?, firstResult: Int?, maxResults: Int?, sortByDateReturnOldestFirst: Boolean?, includeExpired: Boolean?): Response {
+  override fun listItems(
+    userId: UUID?,
+    categoryId: UUID?,
+    firstResult: Int?,
+    maxResults: Int?,
+    sortByDateReturnOldestFirst: Boolean?,
+    includeExpired: Boolean?,
+    itemType: ItemType?
+  ): Response {
 
     if (!isAnonymous && !isUser) {
       return createUnauthorized(FORBIDDEN)
@@ -98,7 +107,7 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       user = userController.findUserById(userId) ?: return createNotFound("User with ID: $userId could not be found")
     }
 
-    if (includeExpired !== null && includeExpired && (userId == null || !userId.equals(loggerUserId)) && !isAdmin) {
+    if (includeExpired !== null && includeExpired && (userId == null || userId != loggerUserId) && !isAdmin) {
       return createUnauthorized("Only admins can list other users expired items")
     }
 
@@ -107,7 +116,15 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       category = categoryController.findCategoryById(categoryId) ?: return createNotFound("Category with ID: $categoryId could not be found!")
     }
 
-    val items = itemController.listItems(firstResult, maxResults, sortByDateReturnOldestFirst, user, category, includeExpired)
+    val items = itemController.listItems(
+      firstResult = firstResult,
+      maxResults = maxResults,
+      sortByDateReturnOldestFirst = sortByDateReturnOldestFirst,
+      user = user,
+      category = category,
+      includeExpired = includeExpired,
+      itemType = itemType
+    )
     return createOk(items.map(itemTranslator::translate))
   }
 
@@ -117,7 +134,7 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     val item = itemController.findItemById(itemId) ?: return createNotFound("Item with ID: $itemId could not be found!")
     val expired = item.expired ?: false
     val userId = item.user?.id
-    if (expired && (loggerUserId == null || userId == null || !userId.equals(loggerUserId))) {
+    if (expired && (loggerUserId == null || userId == null || userId != loggerUserId)) {
       return createNotFound("Item with ID: $itemId is expired!")
     }
     return createOk(itemTranslator.translate(item))
