@@ -229,7 +229,7 @@
             </column>
         </addColumn>
 
-        <sql>UPDATE item SET itemType = 'SELL'</sql>
+        <sql>UPDATE item set itemType = 'SELL'</sql>
     </changeSet>
 
 </databaseChangeLog>
