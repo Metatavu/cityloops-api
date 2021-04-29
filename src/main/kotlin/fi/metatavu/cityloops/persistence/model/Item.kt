@@ -51,6 +51,7 @@ class Item {
   @Column(nullable = true)
   var deliveryPrice: Double? = null
 
+  @Enumerated (EnumType.STRING)
   @Column(nullable = false)
   var itemType: ItemType? = null
 
