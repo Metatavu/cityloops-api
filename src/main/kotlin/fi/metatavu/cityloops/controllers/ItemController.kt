@@ -109,14 +109,31 @@ class ItemController {
    *
    * @param firstResult index of the first result
    * @param maxResults limit amount of results to this number
-   * @param returnOldestFirst return oldest result first
+   * @param sortByDateReturnOldestFirst return oldest result first
    * @param user filter by user
    * @param category filter by category
+   * @param itemType filter by item type
    *
    * @return list of items
    */
-  fun listItems(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?, category: Category?, includeExpired: Boolean?): List<Item> {
-    return itemDAO.list(firstResult, maxResults, returnOldestFirst, user, category, includeExpired)
+  fun listItems(
+    firstResult: Int?,
+    maxResults: Int?,
+    sortByDateReturnOldestFirst: Boolean?,
+    user: User?,
+    category: Category?,
+    includeExpired: Boolean?,
+    itemType: ItemType?
+  ): List<Item> {
+    return itemDAO.list(
+      firstResult = firstResult,
+      maxResults = maxResults,
+      sortByDateReturnOldestFirst = sortByDateReturnOldestFirst,
+      user = user,
+      category = category,
+      includeExpired = includeExpired,
+      itemType = itemType
+    )
   }
 
   /**

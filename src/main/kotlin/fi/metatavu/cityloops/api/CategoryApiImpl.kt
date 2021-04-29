@@ -130,10 +130,11 @@ class CategoryApiImpl: CategoriesApi, AbstractApi() {
     val items = itemController.listItems(
       firstResult = null,
       maxResults = null,
-      returnOldestFirst = null,
+      sortByDateReturnOldestFirst = null,
       user = null,
       category = category,
-      includeExpired = false
+      includeExpired = false,
+      itemType = null
     )
     items.forEach { item ->
       itemController.deleteItem(item)
