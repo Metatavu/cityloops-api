@@ -62,12 +62,14 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     val paymentMethod = payload.paymentMethod
     val delivery = payload.delivery
     val deliveryPrice = payload.deliveryPrice
+    val itemType = payload.itemType
 
     val item = itemController.createItem(
       title = title,
       category = category,
       onlyForCompanies = onlyForCompanies,
       user = user,
+      itemType = itemType,
       metadata = metadata,
       images = images,
       thumbnailUrl = thumbnailUrl,
@@ -142,6 +144,7 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
     val category = categoryController.findCategoryById(categoryId) ?: return createNotFound("Category with ID $categoryId not found")
     val onlyForCompanies = payload.onlyForCompanies
     val metadata =  payload.metadata
+    val itemType = payload.itemType
     val images = payload.images
     val thumbnailUrl = payload.thumbnailUrl
     val itemProperties = payload.properties
@@ -157,6 +160,7 @@ class ItemsApiImpl: ItemsApi, AbstractApi() {
       category = category,
       onlyForCompanies = onlyForCompanies,
       metadata = metadata,
+      itemType = itemType,
       images = images,
       thumbnailUrl = thumbnailUrl,
       properties = itemProperties,

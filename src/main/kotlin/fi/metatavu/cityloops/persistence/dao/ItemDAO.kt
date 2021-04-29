@@ -1,5 +1,6 @@
 package fi.metatavu.cityloops.persistence.dao
 
+import fi.metatavu.cityloops.api.spec.model.ItemType
 import fi.metatavu.cityloops.persistence.model.*
 import java.time.OffsetDateTime
 import java.util.*
@@ -25,6 +26,7 @@ class ItemDAO() : AbstractDAO<Item>() {
    * @param onlyForCompanies is this item available only for companies
    * @param user item owner
    * @param metadata item metadata as string
+   * @param itemType item type
    * @param thumbnailUrl item thumbnail url
    * @param properties item key value property pairs as string
    * @param price price of the item
@@ -41,7 +43,8 @@ class ItemDAO() : AbstractDAO<Item>() {
     category: Category,
     onlyForCompanies: Boolean,
     user: User,
-    metadata: String?,
+    metadata: String,
+    itemType: ItemType,
     thumbnailUrl: String?,
     properties: String?,
     price: Double,
@@ -57,6 +60,7 @@ class ItemDAO() : AbstractDAO<Item>() {
     item.category = category
     item.onlyForCompanies = onlyForCompanies
     item.user = user
+    item.itemType = itemType
     item.metadata = metadata
     item.thumbnailUrl = thumbnailUrl
     item.properties = properties
@@ -75,6 +79,7 @@ class ItemDAO() : AbstractDAO<Item>() {
   /**
    * Updates item title
    *
+   * @param item item
    * @param title new item title
    * @param lastModifierId last modifier's id
    * @return updated item
@@ -88,6 +93,7 @@ class ItemDAO() : AbstractDAO<Item>() {
   /**
    * Updates item category
    *
+   * @param item item
    * @param category category where this item belongs to
    * @param lastModifierId last modifier's id
    * @return updated item
@@ -101,6 +107,7 @@ class ItemDAO() : AbstractDAO<Item>() {
   /**
    * Updates item only for companies boolean
    *
+   * @param item item
    * @param onlyForCompanies is this item available only for companies
    * @param lastModifierId last modifier's id
    * @return updated item
@@ -114,6 +121,7 @@ class ItemDAO() : AbstractDAO<Item>() {
   /**
    * Updates item metadata
    *
+   * @param item item
    * @param metadata item metadata
    * @param lastModifierId last modifier's id
    * @return updated item
@@ -125,8 +133,23 @@ class ItemDAO() : AbstractDAO<Item>() {
   }
 
   /**
+   * Updates item type
+   *
+   * @param item item
+   * @param itemType item type
+   * @param lastModifierId last modifier's id
+   * @return updated item
+   */
+  fun updateItemType(item: Item, itemType: ItemType, lastModifierId: UUID): Item {
+    item.itemType = itemType
+    item.lastModifierId = lastModifierId
+    return persist(item)
+  }
+
+  /**
    * Updates item thumbnail url
    *
+   * @param item item
    * @param thumbnailUrl item thumbnail url
    * @param lastModifierId last modifier's id
    * @return updated item
@@ -140,6 +163,7 @@ class ItemDAO() : AbstractDAO<Item>() {
   /**
    * Updates item price
    *
+   * @param item item
    * @param price price of the item
    * @param lastModifierId last modifier's id
    * @return updated item
@@ -153,6 +177,7 @@ class ItemDAO() : AbstractDAO<Item>() {
   /**
    * Updates item price unit
    *
+   * @param item item
    * @param priceUnit item price unit
    * @param lastModifierId last modifier's id
    * @return updated item
@@ -186,7 +211,7 @@ class ItemDAO() : AbstractDAO<Item>() {
    * @return updated item
    */
   fun updateExpiresAt(item: Item, expiresAt: OffsetDateTime, lastModifierId: UUID?): Item {
-    item.expiresAt = expiresAt;
+    item.expiresAt = expiresAt
     item.lastModifierId = lastModifierId
     return persist(item)
   }
@@ -194,6 +219,7 @@ class ItemDAO() : AbstractDAO<Item>() {
   /**
    * Updates item payment method
    *
+   * @param item item
    * @param paymentMethod item payment method
    * @param lastModifierId last modifier's id
    * @return updated item
@@ -207,6 +233,7 @@ class ItemDAO() : AbstractDAO<Item>() {
   /**
    * Updates item delivery
    *
+   * @param item item
    * @param delivery item delivery
    * @param lastModifierId last modifier's id
    * @return updated item
@@ -220,6 +247,7 @@ class ItemDAO() : AbstractDAO<Item>() {
   /**
    * Updates item delivery price
    *
+   * @param item item
    * @param deliveryPrice item delivery price
    * @param lastModifierId last modifier's id
    * @return updated item
@@ -233,6 +261,7 @@ class ItemDAO() : AbstractDAO<Item>() {
   /**
    * Updates item properties
    *
+   * @param item item
    * @param properties item key value property pairs as string
    * @param lastModifierId last modifier's id
    * @return updated item
@@ -274,7 +303,14 @@ class ItemDAO() : AbstractDAO<Item>() {
    *
    * @return list of items
    */
-  fun list(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?, category: Category?, includeExpired: Boolean?): List<Item> {
+  fun list(
+    firstResult: Int?,
+    maxResults: Int?,
+    returnOldestFirst: Boolean?,
+    user: User?,
+    category: Category?,
+    includeExpired: Boolean?
+  ): List<Item> {
     val entityManager = getEntityManager()
     val criteriaBuilder = entityManager.criteriaBuilder
     val criteria = criteriaBuilder.createQuery(Item::class.java)
@@ -309,7 +345,5 @@ class ItemDAO() : AbstractDAO<Item>() {
       query.maxResults = maxResults
     }
     return query.resultList
-
-
   }
 }

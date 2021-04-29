@@ -5,10 +5,8 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import fi.metatavu.cityloops.api.spec.model.ItemProperty
 import fi.metatavu.cityloops.api.spec.model.Metadata
 import fi.metatavu.cityloops.controllers.ItemImageController
-import fi.metatavu.cityloops.persistence.dao.ItemImageDAO
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-import kotlin.streams.toList
 
 /**
  * Translator for translating JPA item entities into REST resources
@@ -34,6 +32,7 @@ class ItemTranslator: AbstractTranslator<fi.metatavu.cityloops.persistence.model
     result.onlyForCompanies = entity.onlyForCompanies
     result.userId = entity.user?.id!!
     result.metadata = getMetadata(entity.metadata)
+    result.itemType = entity.itemType
     result.images = imagesUrls
     result.thumbnailUrl = entity.thumbnailUrl
     result.properties = getItemProperties(entity.properties)
