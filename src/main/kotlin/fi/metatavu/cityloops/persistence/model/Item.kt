@@ -1,5 +1,6 @@
 package fi.metatavu.cityloops.persistence.model
 
+import fi.metatavu.cityloops.api.spec.model.ItemType
 import java.time.OffsetDateTime
 import java.util.*
 import javax.persistence.*
@@ -49,6 +50,10 @@ class Item {
 
   @Column(nullable = true)
   var deliveryPrice: Double? = null
+
+  @Enumerated (EnumType.STRING)
+  @Column(nullable = false)
+  var itemType: ItemType? = null
 
   @ManyToOne
   var user: User? = null

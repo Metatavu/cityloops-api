@@ -2,6 +2,7 @@ package fi.metatavu.cityloops.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fi.metatavu.cityloops.api.spec.model.ItemProperty
+import fi.metatavu.cityloops.api.spec.model.ItemType
 import fi.metatavu.cityloops.api.spec.model.Metadata
 import fi.metatavu.cityloops.notifications.NotificationController
 import fi.metatavu.cityloops.persistence.dao.ItemDAO
@@ -32,7 +33,7 @@ class ItemController {
   private lateinit var itemImageController: ItemImageController
 
   @Inject
-  private lateinit var notificationController: NotificationController;
+  private lateinit var notificationController: NotificationController
 
   /**
    * Creates new item
@@ -42,6 +43,7 @@ class ItemController {
    * @param onlyForCompanies is this item available only for companies
    * @param user item owner
    * @param metadata item metadata
+   * @param itemType item type
    * @param images list of images
    * @param thumbnailUrl item thumbnail url
    * @param properties item key value property pairs
@@ -59,6 +61,7 @@ class ItemController {
     onlyForCompanies: Boolean,
     user: User,
     metadata: Metadata,
+    itemType: ItemType,
     images: List<String>?,
     thumbnailUrl: String?,
     properties: List<ItemProperty>?,
@@ -76,6 +79,7 @@ class ItemController {
       onlyForCompanies = onlyForCompanies,
       user = user,
       metadata = getDataAsString(metadata),
+      itemType = itemType,
       thumbnailUrl = thumbnailUrl,
       properties = getDataAsString(properties),
       price = price,
@@ -105,14 +109,31 @@ class ItemController {
    *
    * @param firstResult index of the first result
    * @param maxResults limit amount of results to this number
-   * @param returnOldestFirst return oldest result first
+   * @param sortByDateReturnOldestFirst return oldest result first
    * @param user filter by user
    * @param category filter by category
+   * @param itemType filter by item type
    *
    * @return list of items
    */
-  fun listItems(firstResult: Int?, maxResults: Int?, returnOldestFirst: Boolean?, user: User?, category: Category?, includeExpired: Boolean?): List<Item> {
-    return itemDAO.list(firstResult, maxResults, returnOldestFirst, user, category, includeExpired)
+  fun listItems(
+    firstResult: Int?,
+    maxResults: Int?,
+    sortByDateReturnOldestFirst: Boolean?,
+    user: User?,
+    category: Category?,
+    includeExpired: Boolean?,
+    itemType: ItemType?
+  ): List<Item> {
+    return itemDAO.list(
+      firstResult = firstResult,
+      maxResults = maxResults,
+      sortByDateReturnOldestFirst = sortByDateReturnOldestFirst,
+      user = user,
+      category = category,
+      includeExpired = includeExpired,
+      itemType = itemType
+    )
   }
 
   /**
@@ -121,7 +142,7 @@ class ItemController {
    * @return list of items to expire
    */
   fun listItemsToExpire(): List<Item> {
-    return itemDAO.listItemsToExpire();
+    return itemDAO.listItemsToExpire()
   }
 
   /**
@@ -142,6 +163,7 @@ class ItemController {
    * @param category category where this item belongs to
    * @param onlyForCompanies is this item available only for companies
    * @param metadata item metadata
+   * @param itemType item type
    * @param images list of images
    * @param thumbnailUrl item thumbnail url
    * @param properties item key value property pairs
@@ -159,6 +181,7 @@ class ItemController {
     category: Category,
     onlyForCompanies: Boolean,
     metadata: Metadata,
+    itemType: ItemType,
     images: List<String>?,
     thumbnailUrl: String?,
     properties: List<ItemProperty>?,
@@ -175,6 +198,7 @@ class ItemController {
     itemDAO.updateCategory(result, category, lastModifierId)
     itemDAO.updateOnlyForCompanies(result, onlyForCompanies, lastModifierId)
     itemDAO.updateMetadata(result, getDataAsString(metadata), lastModifierId)
+    itemDAO.updateItemType(result, itemType, lastModifierId)
     itemDAO.updateThumbnailUrl(result, thumbnailUrl, lastModifierId)
     itemDAO.updateProperties(result, getDataAsString(properties), lastModifierId)
     itemDAO.updatePrice(result, price, lastModifierId)
