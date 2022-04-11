@@ -37,7 +37,7 @@ class Item {
   var properties: String? = null
 
   @Column(nullable = false)
-  var price: Double? = null
+  var price: String? = null
 
   @Column(nullable = false)
   var priceUnit: String? = null

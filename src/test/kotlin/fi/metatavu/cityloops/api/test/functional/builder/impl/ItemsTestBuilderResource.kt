@@ -70,7 +70,7 @@ class ItemsTestBuilderResource(testBuilder: AbstractTestBuilder<ApiClient?>?, pr
         locationInfo = LocationInfo()
       ),
       priceUnit = "€",
-      price = 0.0,
+      price = "0.0",
       paymentMethod = "Cash only",
       delivery = false,
       expired = false,
