@@ -47,7 +47,7 @@ class ItemDAO() : AbstractDAO<Item>() {
     itemType: ItemType,
     thumbnailUrl: String?,
     properties: String?,
-    price: Double,
+    price: String,
     priceUnit: String,
     paymentMethod: String,
     delivery: Boolean,
@@ -168,7 +168,7 @@ class ItemDAO() : AbstractDAO<Item>() {
    * @param lastModifierId last modifier's id
    * @return updated item
    */
-  fun updatePrice(item: Item, price: Double, lastModifierId: UUID): Item {
+  fun updatePrice(item: Item, price: String, lastModifierId: UUID): Item {
     item.price = price
     item.lastModifierId = lastModifierId
     return persist(item)

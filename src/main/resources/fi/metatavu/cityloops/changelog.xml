@@ -232,4 +232,8 @@
         <sql>UPDATE item set itemType = 'SELL'</sql>
     </changeSet>
 
+    <changeSet id="changeitempricetype" author="simeon.platonov">
+        <modifyDataType tableName="item" columnName="price" newDataType="varchar(100)"/>
+    </changeSet>
+
 </databaseChangeLog>

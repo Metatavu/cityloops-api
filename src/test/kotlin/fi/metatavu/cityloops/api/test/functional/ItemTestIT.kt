@@ -42,7 +42,7 @@ class ItemTestIT: AbstractFunctionalTest() {
         ),
         onlyForCompanies = true,
         userId = userId,
-        price = 0.0,
+        price = "0.0",
         priceUnit = "€/kpl",
         paymentMethod = "Cash only",
         delivery = true,
@@ -139,7 +139,7 @@ class ItemTestIT: AbstractFunctionalTest() {
         ),
         onlyForCompanies = true,
         userId = userId,
-        price = 100.0,
+        price = "100.0",
         priceUnit = "£/kpl",
         paymentMethod = "Cash & Credit card",
         delivery = true,
@@ -161,7 +161,7 @@ class ItemTestIT: AbstractFunctionalTest() {
       assertEquals(itemToUpdate.metadata.locationInfo.address, updatedItem.metadata.locationInfo.address)
       assertEquals(itemToUpdate.metadata.locationInfo.description, updatedItem.metadata.locationInfo.description)
       assertEquals(itemToUpdate.metadata.locationInfo.phone, updatedItem.metadata.locationInfo.phone)
-      assertEquals(itemToUpdate.price, updatedItem.price, 0.0)
+      assertEquals(itemToUpdate.price, updatedItem.price)
       assertEquals(itemToUpdate.priceUnit, updatedItem.priceUnit)
       assertEquals(itemToUpdate.paymentMethod, updatedItem.paymentMethod)
       assertEquals(itemToUpdate.delivery, updatedItem.delivery)
@@ -215,7 +215,7 @@ class ItemTestIT: AbstractFunctionalTest() {
         onlyForCompanies = true,
         userId = userId,
         images = arrayOf("http://example.com/image1.png", "http://example.com/image2.png"),
-        price = 0.0,
+        price = "0.0",
         priceUnit = "€/kpl",
         paymentMethod = "Cash only",
         delivery = false,
@@ -241,7 +241,7 @@ class ItemTestIT: AbstractFunctionalTest() {
           "http://example.com/image3.png",
           "http://example.com/image4.png"
         ),
-        price = 0.0,
+        price = "0.0",
         priceUnit = "€/kpl",
         paymentMethod = "Cash only",
         delivery = false,
